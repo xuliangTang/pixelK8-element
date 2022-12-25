@@ -61,12 +61,15 @@
 
 <script>
 import { getList } from '@/api/deployments'
+// eslint-disable-next-line no-unused-vars
+import { NewClient } from '@/utils/ws'
 
 export default {
   data() {
     return {
       list: null,
-      listLoading: true
+      listLoading: true,
+      wsClient: null
     }
   },
   created() {
@@ -79,6 +82,13 @@ export default {
         this.list = response.data.data
         this.listLoading = false
       })
+      this.wsClient = NewClient()
+      this.wsClient.onmessage = (e) => {
+        if (e.data !== 'ping') {
+          this.list = JSON.parse(e.data)
+          this.$forceUpdate()
+        }
+      }
     }
   }
 }
