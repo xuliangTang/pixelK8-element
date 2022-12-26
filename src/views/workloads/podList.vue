@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p>Pod总数: {{ this.countPods }} 就绪：{{ this.countReadyPods }}</p>
     <el-container v-for="item in nslist" >
       <el-header>命名空间：{{ item.name }}</el-header>
       <el-main>
@@ -9,12 +10,16 @@
           fit
           highlight-current-row
         >
-          <el-table-column label="阶段">
+          <el-table-column label="阶段 / 状态">
             <template slot-scope="scope">
-              <p>{{ scope.row.phase }}</p>
-              <p class="is-red">{{scope.row.message}}</p>
+              <p>
+                <span>{{ scope.row.phase }}</span> /
+                <span v-html="getStatus(scope.row.is_ready)"></span>
+              </p>
+              <p class="is-red" v-html="getMessage(scope.row)"></p>
             </template>
           </el-table-column>
+
           <el-table-column label="名称">
             <template slot-scope="scope">
               <p>{{ scope.row.name }}</p>
@@ -26,7 +31,7 @@
               <p>{{ scope.row.images }}</p>
             </template>
           </el-table-column>
-          <el-table-column label="主机">
+          <el-table-column label="主机" width="130">
             <template slot-scope="scope">
               <p>{{ scope.row.node_name }}</p>
               <p class="is-gray">{{ scope.row.ip[1] }}</p>
@@ -44,16 +49,17 @@
 
 </template>
 <script>
-// eslint-disable-next-line no-unused-vars
 import { getNsList } from '@/api/namespace'
-// eslint-disable-next-line no-unused-vars
 import { getPodList } from '@/api/pod'
+import { NewClient } from '@/utils/ws'
 
 export default {
   data() {
     return {
       nslist: null,
-      podList: {}
+      podList: {},
+      countPods: 0,
+      countReadyPods: 0
     }
   },
   created() {
@@ -63,12 +69,46 @@ export default {
         this.loadPods(ns.name)
       })
     })
+
+    this.wsClient = NewClient()
+    this.wsClient.onmessage = (e) => {
+      if (e.data !== 'ping') {
+        const data = JSON.parse(e.data)
+        if (data.Type === 'pods') {
+          this.$set(this.podList, data.Result.ns, data.Result.data)
+          this.count(data.Result.ns)
+        }
+      }
+    }
   },
   methods: {
     loadPods(ns) {
       getPodList(ns).then(response => {
         // this.podList[ns] = response.data.data
+        // this.$forceUpdate()
         this.$set(this.podList, ns, response.data.data)
+        this.count(ns)
+      })
+    },
+    getStatus(is_ready) {
+      if (is_ready) {
+        return 'Active'
+      } else {
+        return 'Waiting'
+      }
+    },
+    getMessage(row) {
+      if (!row.is_ready) {
+        return row.message
+      }
+      return ''
+    },
+    count(ns) {
+      this.podList[ns].forEach(item => {
+        this.countPods++
+        if (item.is_ready) {
+          this.countReadyPods++
+        }
       })
     }
   }
