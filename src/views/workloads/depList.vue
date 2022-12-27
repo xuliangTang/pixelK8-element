@@ -92,8 +92,8 @@ export default {
       this.wsClient.onmessage = (e) => {
         if (e.data !== 'ping') {
           const data = JSON.parse(e.data)
-          if (data.Type === 'deployments') {
-            this.list = data.Result.data
+          if (data.type === 'deployments') {
+            this.list = data.result.data
             this.$forceUpdate()
           }
         }

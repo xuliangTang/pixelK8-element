@@ -74,9 +74,8 @@ export default {
     this.wsClient.onmessage = (e) => {
       if (e.data !== 'ping') {
         const data = JSON.parse(e.data)
-        if (data.Type === 'pods') {
-          this.$set(this.podList, data.Result.ns, data.Result.data)
-          this.count(data.Result.ns)
+        if (data.type === 'pods') {
+          this.$set(this.podList, data.result.ns, data.result.data)
         }
       }
     }
