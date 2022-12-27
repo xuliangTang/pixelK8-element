@@ -1,11 +1,11 @@
 <template>
   <div>
-    <p>Pod总数: {{ this.countPods }} 就绪：{{ this.countReadyPods }}</p>
+    <p>Pod总数: {{ getPodsNum(false) }} 就绪：{{ getPodsNum(true) }}</p>
     <el-container v-for="item in nslist" >
       <el-header>命名空间：{{ item.name }}</el-header>
       <el-main>
         <el-table
-          :data="podList[item.name]"
+          :data="getPodsList(item.name)"
           border
           fit
           highlight-current-row
@@ -43,6 +43,16 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="getPodsTotal(item.name)"
+          :page-size="5"
+          :current-page="1"
+          :hide-on-single-page="true"
+          @current-change="(current)=>changePage(item.name,current)"
+        >
+        </el-pagination>
       </el-main>
     </el-container>
   </div>
@@ -66,7 +76,7 @@ export default {
     getNsList().then(response => {
       this.nslist = response.data.data
       this.nslist.forEach(ns => {
-        this.loadPods(ns.name)
+        this.loadPods(ns.name, 1)
       })
     })
 
@@ -80,13 +90,51 @@ export default {
       }
     }
   },
+  computed: {
+    // 获取PODS总数
+    getPodsNum(ready) {
+      return (ready) => {
+        let num = 0
+        for (const ns in this.podList) {
+          if (typeof (this.podList[ns]) !== undefined && this.podList[ns] !== null) {
+            if (ready) {
+              num += this.podList[ns].page.extend.count_ready
+            } else {
+              num += this.podList[ns].page.extend.count
+            }
+          }
+        }
+        return num
+      }
+    },
+    // 新增计算属性，因为有的ns下没有pods 因此要做处理
+    getPodsList(ns) {
+      return (ns) => {
+        if (typeof (this.podList[ns]) === undefined || this.podList[ns] == null) {
+          return null
+        }
+        return this.podList[ns].items
+      }
+    },
+    // 计算属性，给分页组件用的。用于显示Total (后端直接传了)
+    getPodsTotal(ns) {
+      return (ns) => {
+        if (typeof (this.podList[ns]) === undefined || this.podList[ns] == null) {
+          return 0
+        }
+        return this.podList[ns].page.extend.count
+      }
+    }
+  },
   methods: {
-    loadPods(ns) {
-      getPodList(ns).then(response => {
+    changePage(ns, page) {
+      this.loadPods(ns, page)
+    },
+    loadPods(ns, page) {
+      getPodList(ns, page).then(response => {
         // this.podList[ns] = response.data.data
         // this.$forceUpdate()
         this.$set(this.podList, ns, response.data.data)
-        this.count(ns)
       })
     },
     getStatus(is_ready) {
@@ -101,14 +149,6 @@ export default {
         return row.message
       }
       return ''
-    },
-    count(ns) {
-      this.podList[ns].forEach(item => {
-        this.countPods++
-        if (item.is_ready) {
-          this.countReadyPods++
-        }
-      })
     }
   }
 }
