@@ -48,7 +48,7 @@
           layout="prev, pager, next"
           :total="getPodsTotal(item.name)"
           :page-size="5"
-          :current-page="1"
+          :current-page.sync="pages[item.name]"
           :hide-on-single-page="true"
           @current-change="(current)=>changePage(item.name,current)"
         >
@@ -68,14 +68,14 @@ export default {
     return {
       nslist: null,
       podList: {},
-      countPods: 0,
-      countReadyPods: 0
+      pages: {}
     }
   },
   created() {
     getNsList().then(response => {
       this.nslist = response.data.data
       this.nslist.forEach(ns => {
+        this.pages[ns] = 1
         this.loadPods(ns.name, 1)
       })
     })
@@ -85,6 +85,7 @@ export default {
       if (e.data !== 'ping') {
         const data = JSON.parse(e.data)
         if (data.type === 'pods') {
+          this.pages[data.result.ns] = 1
           this.$set(this.podList, data.result.ns, data.result.data)
         }
       }
