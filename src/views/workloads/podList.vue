@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <p>Pod总数: {{ getPodsNum(false) }} 就绪：{{ getPodsNum(true) }}</p>
     <el-container v-for="item in nslist" >
       <el-header>命名空间：{{ item.name }}</el-header>
