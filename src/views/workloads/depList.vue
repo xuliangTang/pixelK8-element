@@ -104,6 +104,18 @@ export default {
         this.loadDeployments(ns.name, 1)
       })
     })
+
+    this.wsClient = NewClient()
+    this.wsClient.onmessage = (e) => {
+      if (e.data !== 'ping') {
+        const data = JSON.parse(e.data)
+        if (data.type === 'deployments') {
+          this.pages[data.result.ns] = 1
+          this.depList[data.result.ns] = data.result.data
+          this.$forceUpdate()
+        }
+      }
+    }
     // this.fetchData()
   },
   computed: {
@@ -155,23 +167,6 @@ export default {
         this.$set(this.depList, ns, response.data.data)
       })
     },
-    // fetchData() {
-    //   this.listLoading = true
-    //   getList('default').then(response => {
-    //     this.list = response.data.data
-    //     this.listLoading = false
-    //   })
-    //   this.wsClient = NewClient()
-    //   this.wsClient.onmessage = (e) => {
-    //     if (e.data !== 'ping') {
-    //       const data = JSON.parse(e.data)
-    //       if (data.type === 'deployments') {
-    //         this.list = data.result.data
-    //         this.$forceUpdate()
-    //       }
-    //     }
-    //   }
-    // },
     getStatus(row) {
       if (row.is_completed) {
         return '<span class="is-green">Active</span>'
