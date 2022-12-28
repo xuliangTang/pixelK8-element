@@ -1,9 +1,9 @@
 import request from '@/utils/myRequest'
 
 // 获取deployments列表
-export function getList(ns) {
+export function getDeploymentList(ns, page) {
   return request({
-    url: '/v1/deployments?ns=' + ns,
+    url: '/v1/deployments?ns=' + ns + '&per_page=5&&page=' + page,
     method: 'get'
   })
 }
