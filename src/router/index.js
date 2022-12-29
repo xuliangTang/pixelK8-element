@@ -78,6 +78,28 @@ export const constantRoutes = [
   },
 
   {
+    path: '/service-discovery',
+    component: Layout,
+    redirect: '/service-discovery/ingress',
+    name: 'Example',
+    meta: { title: '服务发现', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'ingress',
+        name: 'Ingress',
+        component: () => import('@/views/service-discovery/ingressList'),
+        meta: { title: 'Ingress', icon: 'table' }
+      },
+      {
+        path: 'services',
+        name: 'Services',
+        component: () => import('@/views/service-discovery/serviceList'),
+        meta: { title: 'Services', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
