@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <p>Ingress总数: {{ countIng() }}</p>
+    <p><router-link to='ingress-create'><el-button>创建</el-button></router-link></p>
     <el-container v-for="item in nslist" >
       <el-header>命名空间：{{ item.name }}</el-header>
       <el-main>

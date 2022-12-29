@@ -7,3 +7,12 @@ export function getIngressList(ns, page) {
     method: 'get'
   })
 }
+
+// 创建ingress
+export function createIngress(data) {
+  return request({
+    url: '/v1/ingress',
+    method: 'post',
+    data
+  })
+}

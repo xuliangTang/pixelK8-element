@@ -95,6 +95,12 @@ export const constantRoutes = [
         name: 'Services',
         component: () => import('@/views/service-discovery/serviceList'),
         meta: { title: 'Services', icon: 'tree' }
+      },
+      {
+        path: 'ingress-create',
+        name: 'Ingress-create',
+        component: () => import('@/views/service-discovery/ingressCreate'),
+        hidden: true
       }
     ]
   },
