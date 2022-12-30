@@ -20,6 +20,21 @@
 
       </el-form>
     </el-card>
+
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>标签设置</span>
+      </div>
+      <div>
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 6}"
+          placeholder="请输入内容"
+          v-model="annotations">
+        </el-input>
+      </div>
+    </el-card>
+
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>规则</span>
@@ -76,7 +91,8 @@ export default {
         { host: '', paths: [{ path: '/', svc_name: '', port: '80' }] }
       ],
       nsList: [],
-      svcList: []
+      svcList: [],
+      annotations: ''
     }
   },
   created() {
@@ -120,7 +136,7 @@ export default {
       })
     },
     postNew() {
-      const data = { name: this.name, namespace: this.namespace, rules: this.rules }
+      const data = { name: this.name, namespace: this.namespace, rules: this.rules, annotations: this.annotations }
       createIngress(data)
         .then((rsp) => {
           this.$router.push({
