@@ -5,15 +5,15 @@
       <el-header>命名空间：{{ item.name }}</el-header>
       <el-main>
         <el-table
+          ref="itemSelect"
           :data="getDepList(item.name)"
-          border
+          stripe
           fit
           highlight-current-row
         >
-          <el-table-column align="center" label="ID" width="60">
-            <template slot-scope="scope">
-              {{ scope.$index+1 }}
-            </template>
+          <el-table-column
+            type="selection"
+            width="55">
           </el-table-column>
           <el-table-column label="状态">
             <template slot-scope="scope">
@@ -182,16 +182,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-.el-header, .el-footer {
-  background-color: #7cd1c0;
-  color: #fff;
-  text-align: center;
-  line-height: 60px;
-}
-.is-gray {color: gray}
-.is-red {color: red}
-.is-green {color: green}
-</style>

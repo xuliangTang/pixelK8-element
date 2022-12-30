@@ -63,3 +63,13 @@ div:focus {
 .app-container {
   padding: 20px;
 }
+
+.el-header, .el-footer {
+  background-color: #f2f2f2;
+  color: #6c6c76;
+  text-align: center;
+  line-height: 60px;
+}
+.is-gray {color: gray}
+.is-red {color: red}
+.is-green {color: green}

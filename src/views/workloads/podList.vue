@@ -5,11 +5,16 @@
       <el-header>命名空间：{{ item.name }}</el-header>
       <el-main>
         <el-table
+          ref="itemSelect"
           :data="getPodsList(item.name)"
-          border
+          stripe
           fit
           highlight-current-row
         >
+          <el-table-column
+            type="selection"
+            width="55">
+          </el-table-column>
           <el-table-column label="阶段 / 状态">
             <template slot-scope="scope">
               <p>
@@ -155,17 +160,3 @@ export default {
 }
 
 </script>
-<style>
-.el-header, .el-footer {
-  background-color: #7cd1c0;
-  color: #fff;
-  text-align: center;
-  line-height: 60px;
-}
-.is-gray {
-  color: gray;
-}
-.is-red {
-  color: red;
-}
-</style>

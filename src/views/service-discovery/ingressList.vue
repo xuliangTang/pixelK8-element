@@ -1,29 +1,48 @@
 <template>
   <div class="app-container">
     <p>Ingress总数: {{ countIng() }}</p>
-    <p><router-link to='ingress-create'><el-button>创建</el-button></router-link></p>
-    <el-container v-for="item in nslist" >
+    <p>
+      <span><router-link to='ingress-create'><el-button>创建</el-button></router-link></span>
+    </p>
+    <el-container v-for="item in nslist">
       <el-header>命名空间：{{ item.name }}</el-header>
       <el-main>
         <el-table
+          ref="itemSelect"
           :data="getIngList(item.name)"
-          border
+          stripe
           fit
           highlight-current-row
         >
-          <el-table-column align="center" label="ID" width="60">
-            <template slot-scope="scope">
-              {{ scope.$index+1 }}
-            </template>
+          <el-table-column
+            type="selection"
+            width="55">
           </el-table-column>
           <el-table-column label="名称">
             <template slot-scope="scope">
               {{ scope.row.name }}
             </template>
           </el-table-column>
+          <el-table-column label="Hosts">
+            <template slot-scope="scope">
+              <p v-for="host in scope.row.hosts"><el-link type="primary"><a :href="'http://'+host" target="_blank"> http://{{ host }} </a></el-link></p>
+            </template>
+          </el-table-column>
           <el-table-column label="创建时间">
             <template slot-scope="scope">
               {{ scope.row.created_at }}
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-dropdown @command="handleMore">
+                <el-button type="text" size="mini">
+                  更多<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu>
+                  <el-dropdown-item :command="['drop', scope.row]">删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
           </el-table-column>
         </el-table>
@@ -104,9 +123,14 @@ export default {
         }
         return num
       }
-    },
+    }
   },
   methods: {
+    handleMore(command) {
+      if (command[0] === 'drop') {
+        console.log('删除')
+      }
+    },
     changePage(ns, page) {
       this.loadIngress(ns, page)
     },
@@ -118,16 +142,3 @@ export default {
   }
 }
 </script>
-
-<style>
-
-.el-header, .el-footer {
-  background-color: #f2f2f2;
-  color: #6c6c76;
-  text-align: center;
-  line-height: 60px;
-}
-.is-gray {color: gray}
-.is-red {color: red}
-.is-green {color: green}
-</style>
