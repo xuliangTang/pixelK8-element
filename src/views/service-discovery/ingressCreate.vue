@@ -26,10 +26,13 @@
         <span>标签设置</span>
       </div>
       <el-collapse>
-        <el-collapse-item title="跨域设置" name="1">
+        <el-collapse-item title="跨域配置" name="1">
           <Cors ref="cors"></Cors>
         </el-collapse-item>
-        <el-collapse-item title="自定义" name="2">
+        <el-collapse-item title="重写配置" name="2">
+          <Rewrite ref="rewrite"></Rewrite>
+        </el-collapse-item>
+        <el-collapse-item title="自定义" name="3">
           <div>
             <el-input
               type="textarea"
@@ -90,6 +93,7 @@ import { createIngress } from '@/api/ingress'
 import { getNsList } from '@/api/namespace'
 import { getServiceAll } from '@/api/service'
 import Cors from './ingressCors'
+import Rewrite from './ingressRewrite'
 export default {
   data() {
     return {
@@ -144,7 +148,10 @@ export default {
       })
     },
     postNew() {
-      const annotations = this.annotations + this.$refs.cors.output()
+      let annotations = this.annotations
+      for (const ref in this.$refs) {
+        annotations += this.$refs[ref].output()
+      }
       const data = {
         name: this.name,
         namespace: this.namespace,
@@ -166,7 +173,7 @@ export default {
     }
   },
   components: {
-    Cors
+    Cors, Rewrite
   }
 
 }

@@ -1,27 +1,25 @@
 <template>
   <div>
-    <div>
-      <el-form :model="corsConfig" label-width="150px">
-        <el-form-item label="启用">
-          <el-switch v-model="corsConfig.enable_cors" />
-        </el-form-item>
-        <el-form-item label="允许来源">
-          <el-input v-model="corsConfig.cors_allow_origin" style="width:150px" />
-        </el-form-item>
-        <el-form-item label="请求方法">
-          <el-input v-model="corsConfig.cors_allow_methods" style="width:450px" />
-        </el-form-item>
-        <el-form-item label="允许头">
-          <el-input v-model="corsConfig.cors_allow_headers" />
-        </el-form-item>
-        <el-form-item label="暴露头(js可访问)">
-          <el-input v-model="corsConfig.cors_expose_headers" />
-        </el-form-item>
-        <el-form-item label="允许凭据">
-          <el-switch v-model="corsConfig.cors_allow_credentials" />
-        </el-form-item>
-      </el-form>
-    </div>
+    <el-form :model="corsConfig" label-width="150px">
+      <el-form-item label="启用">
+        <el-switch v-model="corsConfig.enable_cors" />
+      </el-form-item>
+      <el-form-item label="允许来源">
+        <el-input v-model="corsConfig.cors_allow_origin" style="width:150px" />
+      </el-form-item>
+      <el-form-item label="请求方法">
+        <el-input v-model="corsConfig.cors_allow_methods" style="width:450px" />
+      </el-form-item>
+      <el-form-item label="允许头">
+        <el-input v-model="corsConfig.cors_allow_headers" />
+      </el-form-item>
+      <el-form-item label="暴露头(js可访问)">
+        <el-input v-model="corsConfig.cors_expose_headers" />
+      </el-form-item>
+      <el-form-item label="允许凭据">
+        <el-switch v-model="corsConfig.cors_allow_credentials" />
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 <script>

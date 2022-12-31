@@ -33,12 +33,18 @@
             prop="tag"
             filter-placement="bottom-end">
             <template slot-scope="scope">
-              <div v-if="scope.row.opt.cors_enable">
+              <span v-if="scope.row.opt.cors_enable">
                 <el-tag
                   type="success"
                   disable-transitions
                 >跨域</el-tag>
-              </div>
+              </span>
+              <span v-if="scope.row.opt.rewrite_enable">
+                <el-tag
+                  type="success"
+                  disable-transitions
+                >路径重写</el-tag>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="创建时间">
