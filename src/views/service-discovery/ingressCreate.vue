@@ -25,14 +25,21 @@
       <div slot="header" class="clearfix">
         <span>标签设置</span>
       </div>
-      <div>
-        <el-input
-          type="textarea"
-          :autosize="{ minRows: 2, maxRows: 6}"
-          placeholder="请输入内容"
-          v-model="annotations">
-        </el-input>
-      </div>
+      <el-collapse>
+        <el-collapse-item title="跨域设置" name="1">
+          <Cors ref="cors"></Cors>
+        </el-collapse-item>
+        <el-collapse-item title="自定义" name="2">
+          <div>
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 3, maxRows: 6}"
+              placeholder="格式: key:value;"
+              v-model="annotations">
+            </el-input>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
     </el-card>
 
     <el-card class="box-card">
@@ -82,6 +89,7 @@
 import { createIngress } from '@/api/ingress'
 import { getNsList } from '@/api/namespace'
 import { getServiceAll } from '@/api/service'
+import Cors from './ingressCors'
 export default {
   data() {
     return {
@@ -136,7 +144,13 @@ export default {
       })
     },
     postNew() {
-      const data = { name: this.name, namespace: this.namespace, rules: this.rules, annotations: this.annotations }
+      const annotations = this.annotations + this.$refs.cors.output()
+      const data = {
+        name: this.name,
+        namespace: this.namespace,
+        rules: this.rules,
+        annotations: annotations
+      }
       createIngress(data)
         .then((rsp) => {
           this.$router.push({
@@ -150,6 +164,9 @@ export default {
           }
         })
     }
+  },
+  components: {
+    Cors
   }
 
 }
