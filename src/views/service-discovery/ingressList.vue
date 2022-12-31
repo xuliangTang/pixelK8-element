@@ -28,6 +28,19 @@
               <p v-for="host in scope.row.hosts"><el-link type="primary"><a :href="'http://'+host" target="_blank"> http://{{ host }} </a></el-link></p>
             </template>
           </el-table-column>
+          <el-table-column
+            label="配置"
+            prop="tag"
+            filter-placement="bottom-end">
+            <template slot-scope="scope">
+              <div v-if="scope.row.opt.cors_enable">
+                <el-tag
+                  type="success"
+                  disable-transitions
+                >跨域</el-tag>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="创建时间">
             <template slot-scope="scope">
               {{ scope.row.created_at }}
