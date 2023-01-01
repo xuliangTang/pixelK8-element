@@ -13,6 +13,9 @@
         <span>创建时间: {{ data.created_at }}</span>
       </div>
       <div class="tab-container">
+        <el-descriptions title="扩展信息" v-show="extData.length > 0">
+          <el-descriptions-item v-for="item in extData" :label="item.key"> {{ item.value }} </el-descriptions-item>
+        </el-descriptions>
         <el-form v-for="item in secretData">
           <el-form-item :label="item.key">
             <el-input type="textarea" autosize :value="item.value" />
@@ -29,6 +32,7 @@ export default {
   data() {
     return {
       secretData: [],
+      extData: [],
       ns: '',
       name: '',
       data: {}
@@ -42,6 +46,12 @@ export default {
       for (const key in rsp.data.data.data) {
         this.secretData.push(
           { key, value: decodeURIComponent(atob(rsp.data.data.data[key])) }
+        )
+      }
+
+      for (const key in rsp.data.data.ext) {
+        this.extData.push(
+          { key, value: rsp.data.data.ext[key] }
         )
       }
     })
