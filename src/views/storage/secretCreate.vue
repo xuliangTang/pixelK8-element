@@ -17,29 +17,45 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item label="类型">
+          <el-select v-model="currentCom">
+            <el-option
+              v-for="com in comList "
+              :label="com.name"
+              :value="com.value"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
     </el-card>
-    <Opaque v-bind:Name="Name" v-bind:NameSpace="NameSpace"/>
+
+    <Component :is="currentCom" :name="Name" :name-space="NameSpace"></Component>
   </div>
 </template>
 
 <script>
 import { getNsList } from '@/api/namespace'
 export default {
+  components: {
+    Opaque: () => import('./secretCreateOpaque'),
+    TLS: () => import('./secretCreateTls')
+  },
   data() {
     return {
       Name: '',
       NameSpace: '',
-      nslist: []
+      nslist: [],
+      comList: [
+        { name: '自定义 (Opaque)', value: 'Opaque' },
+        { name: 'TLS凭据', value: 'TLS' }
+      ],
+      currentCom: 'Opaque'
     }
   },
   created() {
     getNsList().then(rsp => {
       this.nslist = rsp.data.data
     })
-  },
-  components: {
-    Opaque: () => import('./secretCreateOpaque')
   }
 }
 </script>
