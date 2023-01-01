@@ -20,6 +20,12 @@
               {{ scope.row.name }}
             </template>
           </el-table-column>
+          <el-table-column label="类型">
+            <template slot-scope="scope">
+              <p>{{ scope.row.type[0] }}</p>
+              <p class="is-gray">{{ scope.row.type[1] }}</p>
+            </template>
+          </el-table-column>
           <el-table-column label="创建时间">
             <template slot-scope="scope">
               {{ scope.row.created_at }}
