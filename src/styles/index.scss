@@ -73,3 +73,36 @@ div:focus {
 .is-gray {color: gray}
 .is-red {color: red}
 .is-green {color: green}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.sub-header {
+  display: flex;
+  flex-direction: row;
+  color: #6c6c76;
+}
+
+
+.header a {
+  color: #3d98d3
+}
+
+.sub-header span {
+  margin: 5px 20px 5px 0;
+}
+
+.tab-container{
+  padding: 20px;
+}
+
+H1 {
+  font-size: 24px;
+  color: #141419;
+  font-style: normal;
+  font-weight: 400;
+  margin: 0 0 10px;
+}

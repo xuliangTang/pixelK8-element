@@ -20,7 +20,7 @@
           </el-table-column>
           <el-table-column label="名称">
             <template slot-scope="scope">
-              {{ scope.row.name }}
+              <router-link :to='"secret-show?ns=" + scope.row.namespace + "&name=" + scope.row.name'>{{ scope.row.name }}</router-link>
             </template>
           </el-table-column>
           <el-table-column label="类型">

@@ -16,3 +16,11 @@ export function createSecret(data) {
     data
   })
 }
+
+// 查看secret
+export function showSecret(ns, name) {
+  return request({
+    url: '/v1/secret/' + ns + '/' + name,
+    method: 'get',
+  })
+}

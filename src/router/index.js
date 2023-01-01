@@ -125,6 +125,12 @@ export const constantRoutes = [
         hidden: true
       },
       {
+        path: 'secret-show',
+        name: 'Secret-show',
+        component: () => import('@/views/storage/secretShow'),
+        hidden: true
+      },
+      {
         path: 'configmap',
         name: 'Configmap',
         component: () => import('@/views/storage/configmapList'),
