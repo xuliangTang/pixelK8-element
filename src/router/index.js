@@ -106,6 +106,28 @@ export const constantRoutes = [
   },
 
   {
+    path: '/storage',
+    component: Layout,
+    redirect: '/storage/secrets',
+    name: 'Example',
+    meta: { title: '存储', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'secrets',
+        name: 'Secrets',
+        component: () => import('@/views/storage/secretList'),
+        meta: { title: 'Secrets', icon: 'table' }
+      },
+      {
+        path: 'configmap',
+        name: 'Configmap',
+        component: () => import('@/views/storage/configmapList'),
+        meta: { title: 'Configmaps', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
