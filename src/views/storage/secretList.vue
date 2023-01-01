@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <p>Secret总数: {{ countSec() }}</p>
+    <p>
+      <span><router-link to='secret-create'><el-button>创建</el-button></router-link></span>
+    </p>
     <el-container v-for="item in nslist">
       <el-header>命名空间：{{ item.name }}</el-header>
       <el-main>

@@ -7,3 +7,12 @@ export function getSecretList(ns, page) {
     method: 'get'
   })
 }
+
+// 创建secret
+export function createSecret(data) {
+  return request({
+    url: '/v1/secret',
+    method: 'post',
+    data
+  })
+}

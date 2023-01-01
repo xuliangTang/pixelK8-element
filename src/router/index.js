@@ -119,6 +119,12 @@ export const constantRoutes = [
         meta: { title: 'Secrets', icon: 'table' }
       },
       {
+        path: 'secret-create',
+        name: 'Secret-create',
+        component: () => import('@/views/storage/secretCreate'),
+        hidden: true
+      },
+      {
         path: 'configmap',
         name: 'Configmap',
         component: () => import('@/views/storage/configmapList'),
