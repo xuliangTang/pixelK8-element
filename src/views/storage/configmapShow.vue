@@ -6,6 +6,7 @@
           <router-link to="configmaps" class="primary">配置映射</router-link>
         </h1>
         <h1>: {{ name }}</h1>
+        <h1><router-link :to='"configmap-create?mode=edit&ns=" + ns + "&name=" + name'><el-button size="mini" icon="el-icon-edit" circle></el-button></router-link></h1>
       </div>
       <div class="sub-header">
         <span>命名空间: {{ ns }}</span>

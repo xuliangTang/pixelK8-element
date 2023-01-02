@@ -6,10 +6,10 @@
       </div>
       <el-form :inline="true">
         <el-form-item label="名称">
-          <el-input v-model="Name"/>
+          <el-input v-model="Name" :disabled="isEdit" />
         </el-form-item>
         <el-form-item label="命名空间">
-          <el-select v-model="NameSpace">
+          <el-select v-model="NameSpace" :disabled="isEdit">
             <el-option
               v-for="ns in nslist "
               :label="ns.name"
@@ -20,7 +20,7 @@
       </el-form>
     </el-card>
 
-    <Component :is="currentCom" :name="Name" :name-space="NameSpace"></Component>
+    <Component :is="currentCom" :name="Name" :name-space="NameSpace"/>
   </div>
 </template>
 
@@ -35,13 +35,21 @@ export default {
       Name: '',
       NameSpace: '',
       nslist: [],
-      currentCom: 'Literal'
+      currentCom: 'Literal',
+      isEdit: false
     }
   },
   created() {
     getNsList().then(rsp => {
       this.nslist = rsp.data.data
     })
+  },
+  methods: {
+    childSet(ns, name) {
+      this.NameSpace = ns
+      this.Name = name
+      this.isEdit = true
+    }
   }
 }
 </script>
