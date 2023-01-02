@@ -131,10 +131,16 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'configmap',
-        name: 'Configmap',
+        path: 'configmaps',
+        name: 'Configmaps',
         component: () => import('@/views/storage/configmapList'),
         meta: { title: 'Configmaps', icon: 'tree' }
+      },
+      {
+        path: 'configmap-create',
+        name: 'Configmap-create',
+        component: () => import('@/views/storage/configmapCreate'),
+        hidden: true
       }
     ]
   },

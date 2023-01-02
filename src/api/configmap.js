@@ -7,3 +7,12 @@ export function getConfigmapList(ns, page) {
     method: 'get'
   })
 }
+
+// 创建configmap
+export function createConfigmap(data) {
+  return request({
+    url: '/v1/configmap',
+    method: 'post',
+    data
+  })
+}

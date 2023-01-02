@@ -2,7 +2,7 @@
   <div class="app-container">
     <p>Configmap总数: {{ countCm() }}</p>
     <p>
-      <span><router-link to='secret-create'><el-button>创建</el-button></router-link></span>
+      <span><router-link to='configmap-create'><el-button>创建</el-button></router-link></span>
     </p>
     <el-container v-for="item in nslist">
       <el-header>命名空间：{{ item.name }}</el-header>
