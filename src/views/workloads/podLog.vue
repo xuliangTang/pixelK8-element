@@ -15,7 +15,8 @@
   </div>
 </template>
 <script>
-import { getPodContainers, getPodLogs } from "@/api/pod";
+import { getPodContainers } from '@/api/pod'
+import streamRequest from '@/utils/streamRequests'
 
 export default {
   data() {
@@ -38,10 +39,18 @@ export default {
   },
   methods: {
     containerChange() {
-      getPodLogs(this.ns, this.podName, this.selectedContainer)
+      /* getPodLogs(this.ns, this.podName, this.selectedContainer)
         .then(rsp => {
           this.logs = rsp.data.data
-        })
+        })*/
+      streamRequest({
+        url: '/v1/pod/' + this.ns + '/' + this.podName + '/logs?container_name=' + this.selectedContainer,
+        method: 'GET',
+        onDownloadProgress: e => {
+          const dataChunk = e.currentTarget.response
+          this.logs += dataChunk
+        }
+      })
     }
   }
 }
