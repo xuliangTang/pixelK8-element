@@ -141,6 +141,12 @@ export const constantRoutes = [
         name: 'Configmap-create',
         component: () => import('@/views/storage/configmapCreate'),
         hidden: true
+      },
+      {
+        path: 'configmap-show',
+        name: 'Configmap-show',
+        component: () => import('@/views/storage/configmapShow'),
+        hidden: true
       }
     ]
   },

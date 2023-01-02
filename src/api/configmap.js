@@ -16,3 +16,11 @@ export function createConfigmap(data) {
     data
   })
 }
+
+// 查看configmap
+export function showConfigmap(ns, name) {
+  return request({
+    url: '/v1/configmap/' + ns + '/' + name,
+    method: 'get',
+  })
+}
