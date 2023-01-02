@@ -47,6 +47,19 @@
               {{ scope.row.created_at }}
             </template>
           </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-dropdown>
+                <el-button type="text" size="mini">
+                  更多<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu>
+                  <el-dropdown-item><router-link :to='"pod-log?ns=" + item.name + "&name=" + scope.row.name'>查看日志</router-link></el-dropdown-item>
+                  <el-dropdown-item>删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </template>
+          </el-table-column>
         </el-table>
         <el-pagination
           background

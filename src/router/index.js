@@ -73,6 +73,13 @@ export const constantRoutes = [
         name: 'Pods',
         component: () => import('@/views/workloads/podList'),
         meta: { title: 'Pods', icon: 'tree' }
+      },
+      {
+        path: 'pod-log',
+        name: 'Pod-log',
+        component: () => import('@/views/workloads/podLog'),
+        meta: { title: 'Pod日志' },
+        hidden: true
       }
     ]
   },
@@ -100,6 +107,7 @@ export const constantRoutes = [
         path: 'ingress-create',
         name: 'Ingress-create',
         component: () => import('@/views/service-discovery/ingressCreate'),
+        meta: { title: '编辑ingress' },
         hidden: true
       }
     ]
@@ -122,12 +130,14 @@ export const constantRoutes = [
         path: 'secret-create',
         name: 'Secret-create',
         component: () => import('@/views/storage/secretCreate'),
+        meta: { title: '编辑secret' },
         hidden: true
       },
       {
         path: 'secret-show',
         name: 'Secret-show',
         component: () => import('@/views/storage/secretShow'),
+        meta: { title: 'secret详情' },
         hidden: true
       },
       {
@@ -140,12 +150,14 @@ export const constantRoutes = [
         path: 'configmap-create',
         name: 'Configmap-create',
         component: () => import('@/views/storage/configmapCreate'),
+        meta: { title: '编辑configmap' },
         hidden: true
       },
       {
         path: 'configmap-show',
         name: 'Configmap-show',
         component: () => import('@/views/storage/configmapShow'),
+        meta: { title: 'configmap详情' },
         hidden: true
       }
     ]

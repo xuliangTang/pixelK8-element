@@ -7,3 +7,19 @@ export function getPodList(ns, page) {
     method: 'get'
   })
 }
+
+// 获取pod的容器列表
+export function getPodContainers(ns, podName) {
+  return request({
+    url: '/v1/pod/' + ns + '/' + podName + '/containers',
+    method: 'get'
+  })
+}
+// 获取pod的日志
+export function getPodLogs(ns, podName, containerName) {
+  return request({
+    url: '/v1/pod/' + ns + '/' + podName + '/logs?container_name=' + containerName,
+    method: 'get'
+  })
+}
+
