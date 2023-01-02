@@ -23,6 +23,11 @@
               <router-link :to='"configmap-show?ns=" + scope.row.namespace + "&name=" + scope.row.name'><el-link type="primary">{{ scope.row.name }}</el-link></router-link>
             </template>
           </el-table-column>
+          <el-table-column label="数据">
+            <template slot-scope="scope">
+              {{ scope.row.keys.join(', ') }}
+            </template>
+          </el-table-column>
           <el-table-column label="创建时间">
             <template slot-scope="scope">
               {{ scope.row.created_at }}
