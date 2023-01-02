@@ -17,7 +17,18 @@
           </el-form-item>
         </el-form>
         <el-button type="primary" icon="el-icon-plus" @click="addKV">添加配置</el-button>
+        <!--<el-upload multiple class="upload" action="" :on-change="fileChange" ref="files"><el-button icon="el-icon-tickets">从文件读取</el-button></el-upload>-->
+        <el-button icon="el-icon-tickets" onclick="document.formInput.files.click()">从文件读取</el-button>
         <el-button type="primary" icon="el-icon-success" @click="Save">保存</el-button>
+        <form name="formInput" style="display:none">
+          <input
+            id="files"
+            ref="files"
+            type="file"
+            multiple
+            @change="fileChange"
+          >
+        </form>
       </div>
     </el-card>
   </div>
@@ -54,6 +65,26 @@ export default {
     }
   },
   methods: {
+    fileChange() {
+      const files = this.$refs['files'].files
+      if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          const reader = new FileReader()
+          reader.readAsText(files[i], 'UTF-8')
+          reader.filename = files[i].name
+          reader.onload = (e) => {
+            if (this.kvs.length === 1 && this.kvs[0].key === '') {
+              this.kvs[0].key = e.target.filename
+              this.kvs[0].value = e.target.result
+            } else {
+              this.kvs.push(
+                { key: e.target.filename, value: e.target.result }
+              )
+            }
+          }
+        }
+      }
+    },
     addKV() {
       this.kvs.push({ key: '', value: '' })
     },
