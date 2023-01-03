@@ -49,13 +49,13 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-dropdown>
+              <el-dropdown trigger="click" @command="handleMore">
                 <el-button type="text" size="mini">
-                  更多<i class="el-icon-arrow-down el-icon--right"></i>
+                  更多<i class="el-icon-caret-bottom el-icon--right"></i>
                 </el-button>
-                <el-dropdown-menu>
+                <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item><router-link :to='"pod-log?ns=" + item.name + "&name=" + scope.row.name'>查看日志</router-link></el-dropdown-item>
-                  <el-dropdown-item>删除</el-dropdown-item>
+                  <el-dropdown-item :command="['drop', scope.row]" class="clearfix">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
@@ -78,7 +78,7 @@
 </template>
 <script>
 import { getNsList } from '@/api/namespace'
-import { getPodList } from '@/api/pod'
+import { getPodList, deletePod } from '@/api/pod'
 import { NewClient } from '@/utils/ws'
 
 export default {
@@ -146,6 +146,17 @@ export default {
     }
   },
   methods: {
+    handleMore(command) {
+      if (command[0] === 'drop') {
+        deletePod(command[1].namespace, command[1].name).catch((err) => {
+          if (err.response) {
+            this.$message.error(err.response.data.error)
+          } else {
+            this.$message.error(err.message)
+          }
+        })
+      }
+    },
     changePage(ns, page) {
       this.loadPods(ns, page)
     },

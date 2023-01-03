@@ -7,3 +7,11 @@ export function getDeploymentList(ns, page) {
     method: 'get'
   })
 }
+
+// 删除deployment
+export function deleteDeployment(ns, name) {
+  return request({
+    url: '/v1/deployment/' + ns + '/' + name,
+    method: 'delete'
+  })
+}

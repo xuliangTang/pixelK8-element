@@ -36,12 +36,12 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-dropdown @command="handleMore">
+              <el-dropdown trigger="click" @command="handleMore">
                 <el-button type="text" size="mini">
-                  更多<i class="el-icon-arrow-down el-icon--right"></i>
+                  更多<i class="el-icon-caret-bottom el-icon--right"></i>
                 </el-button>
-                <el-dropdown-menu>
-                  <el-dropdown-item :command="['drop', scope.row]">删除</el-dropdown-item>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="['drop', scope.row]" class="clearfix">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </template>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { getSecretList } from '@/api/secret'
+import { getSecretList, deleteSecret } from '@/api/secret'
 import { NewClient } from '@/utils/ws'
 import { getNsList } from '@/api/namespace'
 
@@ -129,7 +129,13 @@ export default {
   methods: {
     handleMore(command) {
       if (command[0] === 'drop') {
-        console.log('删除')
+        deleteSecret(command[1].namespace, command[1].name).catch((err) => {
+          if (err.response) {
+            this.$message.error(err.response.data.error)
+          } else {
+            this.$message.error(err.message)
+          }
+        })
       }
     },
     changePage(ns, page) {

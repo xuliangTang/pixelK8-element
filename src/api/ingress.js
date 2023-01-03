@@ -16,3 +16,11 @@ export function createIngress(data) {
     data
   })
 }
+
+// 删除ingress
+export function deleteIngress(ns, name) {
+  return request({
+    url: '/v1/ingress/' + ns + '/' + name,
+    method: 'delete'
+  })
+}

@@ -43,27 +43,26 @@
               {{ scope.row.created_at }}
             </template>
           </el-table-column>
-    <!--      <el-table-column label="Author" width="110" align="center">
+          <el-table-column label="操作">
             <template slot-scope="scope">
-              <span>{{ scope.row.author }}</span>
+              <!--<el-dropdown @command="handleMore">
+                <el-button type="text" size="mini">
+                  更多<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>
+                </el-button>
+                <el-dropdown-menu>
+                  <el-dropdown-item :command="['drop', scope.row]">删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>-->
+              <el-dropdown trigger="click" @command="handleMore">
+                <el-button type="text" size="mini">
+                  更多<i class="el-icon-caret-bottom el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="['drop', scope.row]" class="clearfix">删除</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
           </el-table-column>
-          <el-table-column label="Pageviews" width="110" align="center">
-            <template slot-scope="scope">
-              {{ scope.row.pageviews }}
-            </template>
-          </el-table-column>
-          <el-table-column class-name="status-col" label="Status" width="110" align="center">
-            <template slot-scope="scope">
-              <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-            <template slot-scope="scope">
-              <i class="el-icon-time" />
-              <span>{{ scope.row.display_time }}</span>
-            </template>
-          </el-table-column>-->
         </el-table>
         <el-pagination
           background
@@ -81,7 +80,7 @@
 </template>
 
 <script>
-import { getDeploymentList } from '@/api/deployments'
+import { getDeploymentList, deleteDeployment } from '@/api/deployments'
 import { NewClient } from '@/utils/ws'
 import { getNsList } from '@/api/namespace'
 
@@ -159,6 +158,17 @@ export default {
     }
   },
   methods: {
+    handleMore(command) {
+      if (command[0] === 'drop') {
+        deleteDeployment(command[1].namespace, command[1].name).catch((err) => {
+          if (err.response) {
+            this.$message.error(err.response.data.error)
+          } else {
+            this.$message.error(err.message)
+          }
+        })
+      }
+    },
     changePage(ns, page) {
       this.loadDeployments(ns, page)
     },

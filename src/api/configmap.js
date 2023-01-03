@@ -24,3 +24,11 @@ export function showConfigmap(ns, name) {
     method: 'get',
   })
 }
+
+// 删除configmap
+export function deleteConfigmap(ns, name) {
+  return request({
+    url: '/v1/configmap/' + ns + '/' + name,
+    method: 'delete'
+  })
+}

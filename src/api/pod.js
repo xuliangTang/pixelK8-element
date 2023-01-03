@@ -23,3 +23,11 @@ export function getPodLogs(ns, podName, containerName) {
   })
 }
 
+// 删除pod
+export function deletePod(ns, name) {
+  return request({
+    url: '/v1/pod/' + ns + '/' + name,
+    method: 'delete'
+  })
+}
+

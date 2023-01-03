@@ -21,6 +21,14 @@ export function createSecret(data) {
 export function showSecret(ns, name) {
   return request({
     url: '/v1/secret/' + ns + '/' + name,
-    method: 'get',
+    method: 'get'
+  })
+}
+
+// 删除secret
+export function deleteSecret(ns, name) {
+  return request({
+    url: '/v1/secret/' + ns + '/' + name,
+    method: 'delete'
   })
 }
