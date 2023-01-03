@@ -10,7 +10,7 @@
             <el-input v-model="kvs[0].key" style="width:200px" />
           </el-form-item>
           <el-form-item label="私钥内容">
-            <el-input v-model="kvs[0].value" placeholder="粘贴私钥，一般以-----BEGIN RSA PRIVATE KEY-----开头" type="textarea" :row="2" />
+            <el-input v-model="kvs[0].value" placeholder="粘贴私钥，一般以-----BEGIN RSA PRIVATE KEY-----开头" type="textarea" :autosize="{ minRows: 2}" />
             <p>
               <a href="javascript:" class="file">从文件导入
                 <input ref="filekey" type="file" accept=".txt,.pem,.key,.pkey" @change="()=>fileChange('filekey')" />
@@ -22,7 +22,7 @@
             <el-input v-model="kvs[1].key" style="width:200px" />
           </el-form-item>
           <el-form-item label="证书内容">
-            <el-input v-model="kvs[1].value" placeholder="粘贴证书，一般以-----BEGIN CERTIFICATE-----开头" type="textarea" :row="2" />
+            <el-input v-model="kvs[1].value" placeholder="粘贴证书，一般以-----BEGIN CERTIFICATE-----开头" type="textarea" :autosize="{ minRows: 2}" />
             <p>
               <a href="javascript:" class="file">从文件导入
                 <input ref="filecrt" type="file" accept=".txt,.pem,.crt,.cert" @change="()=>fileChange('filecrt')" />
@@ -40,13 +40,23 @@
 <script>
 import { createSecret } from '@/api/secret'
 export default {
-  props: ['Name', 'NameSpace'],
+  props: ['Name', 'NameSpace', 'isEdit', 'editData'],
   data() {
     return {
       kvs: [
         { key: 'tls.key', value: '' },
         { key: 'tls.crt', value: '' }
       ]
+    }
+  },
+  mounted() {
+    if (this.isEdit && Object.keys(this.editData).length === 2) {
+      this.kvs = []
+      for (const key in this.editData) {
+        this.kvs.push(
+          { key: key, value: decodeURIComponent(atob(this.editData[key])) }
+        )
+      }
     }
   },
   methods: {
@@ -70,10 +80,11 @@ export default {
       })
 
       const postModel = {
-        Name: this.$props.Name,
-        NameSpace: this.$props.NameSpace,
-        Type: 'kubernetes.io/tls',
-        Data: postData
+        name: this.$props.Name,
+        namespace: this.$props.NameSpace,
+        type: 'kubernetes.io/tls',
+        data: postData,
+        is_edit: this.isEdit
       }
 
       createSecret(postModel)

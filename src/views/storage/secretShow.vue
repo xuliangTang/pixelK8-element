@@ -6,6 +6,7 @@
           <router-link to="secrets" class="primary">密文</router-link>
         </h1>
         <h1>: {{ name }}</h1>
+        <h1><router-link :to='"secret-create?mode=edit&ns=" + ns + "&name=" + name'><el-button size="mini" icon="el-icon-edit" circle></el-button></router-link></h1>
       </div>
       <div class="sub-header">
         <span>类型：{{ data.type[1] }} ({{ data.type[0] }})</span>
