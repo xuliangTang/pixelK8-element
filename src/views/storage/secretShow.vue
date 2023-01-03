@@ -6,10 +6,11 @@
           <router-link to="secrets" class="primary">密文</router-link>
         </h1>
         <h1>: {{ name }}</h1>
-        <h1><router-link :to='"secret-create?mode=edit&ns=" + ns + "&name=" + name'><el-button size="mini" icon="el-icon-edit" circle></el-button></router-link></h1>
+        <h1 v-if="editable"><router-link :to='"secret-create?mode=edit&ns=" + ns + "&name=" + name'><el-button size="mini" icon="el-icon-edit" circle></el-button></router-link></h1>
+        <h1 v-else><el-button disabled size="mini" icon="el-icon-edit" circle></el-button></h1>
       </div>
       <div class="sub-header">
-        <span>类型：{{ data.type[1] }} ({{ data.type[0] }})</span>
+        <span v-if="data.type">类型：{{ data.type[1] }} ({{ data.type[0] }})</span>
         <span>命名空间: {{ ns }}</span>
         <span>创建时间: {{ data.created_at }}</span>
       </div>
@@ -36,7 +37,12 @@ export default {
       extData: [],
       ns: '',
       name: '',
-      data: {}
+      data: {},
+      comMap: {
+        'kubernetes.io/tls': 'TLS',
+        'Opaque': 'Opaque'
+      },
+      editable: false
     }
   },
   created() {
@@ -44,6 +50,11 @@ export default {
     this.name = this.$route.query.name
     showSecret(this.ns, this.name).then(rsp => {
       this.data = rsp.data.data
+
+      if (this.comMap[this.data.type[0]] !== undefined) {
+        this.editable = true
+      }
+
       for (const key in rsp.data.data.data) {
         this.secretData.push(
           { key, value: decodeURIComponent(atob(rsp.data.data.data[key])) }
