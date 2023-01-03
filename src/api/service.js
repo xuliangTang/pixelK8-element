@@ -15,3 +15,11 @@ export function getServiceList(ns, page) {
     method: 'get'
   })
 }
+
+// 删除service
+export function deleteService(ns, name) {
+  return request({
+    url: '/v1/service/' + ns + '/' + name,
+    method: 'delete'
+  })
+}

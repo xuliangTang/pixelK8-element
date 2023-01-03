@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { getServiceList } from '@/api/service'
+import { getServiceList, deleteService } from '@/api/service'
 import { NewClient } from '@/utils/ws'
 import { getNsList } from '@/api/namespace'
 
@@ -135,6 +135,13 @@ export default {
   methods: {
     handleMore(command) {
       if (command[0] === 'drop') {
+        deleteService(command[1].namespace, command[1].name).catch((err) => {
+          if (err.response) {
+            this.$message.error(err.response.data.error)
+          } else {
+            this.$message.error(err.message)
+          }
+        })
       }
     },
     changePage(ns, page) {
