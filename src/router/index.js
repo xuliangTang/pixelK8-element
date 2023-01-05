@@ -54,7 +54,34 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
+  {
+    path: '/cluster',
+    component: Layout,
+    redirect: '/cluster/nodes',
+    name: 'Example',
+    meta: { title: '集群', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'nodes',
+        name: 'Nodes',
+        component: () => import('@/views/cluster/nodeList'),
+        meta: { title: 'Nodes', icon: 'table' }
+      },
+      {
+        path: 'namespaces',
+        name: 'Namespaces',
+        component: () => import('@/views/cluster/nsList'),
+        meta: { title: 'Namespaces', icon: 'table' }
+      },
+      {
+        path: 'node-terminal',
+        name: 'Node-terminal',
+        component: () => import('@/views/cluster/nodeTerminal'),
+        meta: { title: 'Pod终端' },
+        hidden: true
+      }
+    ]
+  },
   {
     path: '/workloads',
     component: Layout,
