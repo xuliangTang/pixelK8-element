@@ -80,6 +80,13 @@ export const constantRoutes = [
         component: () => import('@/views/workloads/podLog'),
         meta: { title: 'Pod日志' },
         hidden: true
+      },
+      {
+        path: 'pod-terminal',
+        name: 'Pod-terminal',
+        component: () => import('@/views/workloads/podTerminal'),
+        meta: { title: 'Pod终端' },
+        hidden: true
       }
     ]
   },

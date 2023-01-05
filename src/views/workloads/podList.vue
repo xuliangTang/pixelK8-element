@@ -55,6 +55,7 @@
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item><router-link :to='"pod-log?ns=" + item.name + "&name=" + scope.row.name'>查看日志</router-link></el-dropdown-item>
+                  <el-dropdown-item><router-link :to='"pod-terminal?ns=" + item.name + "&name=" + scope.row.name'>进入终端</router-link></el-dropdown-item>
                   <el-dropdown-item :command="['drop', scope.row]" class="clearfix">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
