@@ -8,8 +8,9 @@
           :value="c.name"
         />
       </el-select>
+      <el-button style="margin-left: 5px" @click="logs=''">清空</el-button>
     </div>
-    <div class="logs">
+    <div class="logs" ref="logs">
       {{ logs }}
     </div>
   </div>
@@ -48,8 +49,14 @@ export default {
         method: 'GET',
         onDownloadProgress: e => {
           const dataChunk = e.currentTarget.response
-          this.logs += dataChunk
+          this.logs = dataChunk
+
+          if (this.$refs['logs'] !== undefined && this.$refs['logs'].scrollTop !== undefined){
+            this.$refs['logs'].scrollTop = this.$refs['logs'].scrollHeight
+          }
         }
+      }).catch(e => {
+        this.$router.push({ name: 'pods' })
       })
     }
   }
@@ -61,7 +68,7 @@ export default {
 
   margin:10px auto;
   min-height: 200px;
-  max-height: 800px;
+  max-height: 680px;
   border: solid 1px black;
   background-color: #454545;
   padding: 10px;
