@@ -16,15 +16,30 @@
       <el-table-column label="名称">
         <template slot-scope="scope">
           <p>{{ scope.row.name }}</p>
-          <p><el-tag type="success" v-for="label in scope.row.labels"> {{ label }} </el-tag></p>
-        </template>
-      </el-table-column>
-      <el-table-column label="内网 IP">
-        <template slot-scope="scope">
           <p>{{ scope.row.ip }}</p>
         </template>
       </el-table-column>
-
+      <el-table-column label="自定义labels / taints">
+        <template slot-scope="scope">
+          <p><el-tag type="success" v-for="label in scope.row.labels"> {{ label }} </el-tag></p>
+          <p><el-tag type="danger" v-for="taint in scope.row.taints"> {{ taint }} </el-tag></p>
+        </template>
+      </el-table-column>
+      <el-table-column label="CPU">
+        <template slot-scope="scope">
+          <p>{{ Math.round(scope.row.capacity_usage.cpu / 1000 / scope.row.capacity.cpu * 100) }}% / {{ scope.row.capacity.cpu }}核</p>
+        </template>
+      </el-table-column>
+      <el-table-column label="内存">
+        <template slot-scope="scope">
+          <p>{{ Math.round(scope.row.capacity_usage.memory / 1000 / scope.row.capacity.memory * 100) }}% / {{ Math.round(scope.row.capacity.memory/1000/1000/1000) }}G</p>
+        </template>
+      </el-table-column>
+      <el-table-column label="Pod">
+        <template slot-scope="scope">
+          <p>{{ scope.row.capacity_usage.pods }} / {{ scope.row.capacity.pods }}</p>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间">
         <template slot-scope="scope">
           {{ scope.row.created_at }}
