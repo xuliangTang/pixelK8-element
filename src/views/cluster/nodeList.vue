@@ -16,6 +16,7 @@
       <el-table-column label="名称">
         <template slot-scope="scope">
           <p>{{ scope.row.name }}</p>
+          <p><el-tag type="success" v-for="label in scope.row.labels"> {{ label }} </el-tag></p>
         </template>
       </el-table-column>
       <el-table-column label="内网 IP">
