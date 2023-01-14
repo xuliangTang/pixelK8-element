@@ -68,6 +68,20 @@ export const constantRoutes = [
         meta: { title: 'Nodes', icon: 'table' }
       },
       {
+        path: 'node-show',
+        name: 'Node-show',
+        component: () => import('@/views/cluster/nodeShow'),
+        meta: { title: 'node详情' },
+        hidden: true
+      },
+      {
+        path: 'node-edit',
+        name: 'Node-edit',
+        component: () => import('@/views/cluster/nodeEdit'),
+        meta: { title: '编辑node' },
+        hidden: true
+      },
+      {
         path: 'namespaces',
         name: 'Namespaces',
         component: () => import('@/views/cluster/nsList'),

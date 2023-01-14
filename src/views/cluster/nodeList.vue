@@ -15,7 +15,7 @@
       </el-table-column>
       <el-table-column label="名称">
         <template slot-scope="scope">
-          <p>{{ scope.row.name }}</p>
+          <router-link :to='"node-show?name=" + scope.row.name'><el-link type="primary">{{ scope.row.name }}</el-link></router-link>
           <p>{{ scope.row.ip }}</p>
         </template>
       </el-table-column>
