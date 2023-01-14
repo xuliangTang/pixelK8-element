@@ -165,7 +165,7 @@ export const constantRoutes = [
     path: '/storage',
     component: Layout,
     redirect: '/storage/secrets',
-    name: 'Example',
+    name: 'rbac',
     meta: { title: '存储', icon: 'el-icon-s-help' },
     children: [
       {
@@ -207,6 +207,28 @@ export const constantRoutes = [
         component: () => import('@/views/storage/configmapShow'),
         meta: { title: 'configmap详情' },
         hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/rbac',
+    component: Layout,
+    redirect: '/rbac/roles',
+    name: 'Example',
+    meta: {title: 'RBAC', icon: 'el-icon-s-help'},
+    children: [
+      {
+        path: 'roles',
+        name: 'Roles',
+        component: () => import('@/views/rbac/roleList'),
+        meta: {title: 'Roles', icon: 'table'}
+      },
+      {
+        path: 'cluster-roles',
+        name: 'Cluster-roles',
+        component: () => import('@/views/rbac/clusterRoleList'),
+        meta: {title: 'ClusterRoles', icon: 'table'}
       }
     ]
   },
