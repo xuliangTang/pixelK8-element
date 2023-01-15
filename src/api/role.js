@@ -7,3 +7,20 @@ export function getRoleList(ns, page) {
     method: 'get'
   })
 }
+
+// 创建role
+export function createRole(data) {
+  return request({
+    url: '/v1/role',
+    method: 'post',
+    data
+  })
+}
+
+// 删除role
+export function deleteRole(ns, name) {
+  return request({
+    url: '/v1/role/' + ns + '/' + name,
+    method: 'delete'
+  })
+}

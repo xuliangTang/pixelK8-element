@@ -225,6 +225,13 @@ export const constantRoutes = [
         meta: {title: 'Roles', icon: 'table'}
       },
       {
+        path: 'role-create',
+        name: 'Role-create',
+        component: () => import('@/views/rbac/roleCreate'),
+        meta: {title: '编辑Role', icon: 'table'},
+        hidden: true
+      },
+      {
         path: 'cluster-roles',
         name: 'Cluster-roles',
         component: () => import('@/views/rbac/clusterRoleList'),
