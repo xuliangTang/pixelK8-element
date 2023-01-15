@@ -7,3 +7,20 @@ export function getRoleBindingList(ns, page) {
     method: 'get'
   })
 }
+
+// 创建roleBinding
+export function createRoleBinding(data) {
+  return request({
+    url: '/v1/roleBinding',
+    method: 'post',
+    data
+  })
+}
+
+// 删除roleBinding
+export function deleteRoleBinding(ns, name) {
+  return request({
+    url: '/v1/roleBinding/' + ns + '/' + name,
+    method: 'delete'
+  })
+}

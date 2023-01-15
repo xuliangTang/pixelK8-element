@@ -8,6 +8,14 @@ export function getRoleList(ns, page) {
   })
 }
 
+// 获取全部role
+export function getRoleAll(ns) {
+  return request({
+    url: '/v1/roles/all?ns=' + ns,
+    method: 'get'
+  })
+}
+
 // 创建role
 export function createRole(data) {
   return request({

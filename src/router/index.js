@@ -243,6 +243,13 @@ export const constantRoutes = [
         component: () => import('@/views/rbac/roleBindingList'),
         meta: {title: 'RoleBindings', icon: 'table'}
       },
+      {
+        path: 'rolebinding-create',
+        name: 'Rolebinding-create',
+        component: () => import('@/views/rbac/roleBindingCreate'),
+        meta: {title: '编辑RoleBinding', icon: 'table'},
+        hidden: true
+      }
     ]
   },
 

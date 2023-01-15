@@ -2,7 +2,7 @@
   <div class="app-container">
     <p>RoleBinding总数: {{ countRoleBinding() }}</p>
     <p>
-      <span><router-link to='role-create'><el-button>创建</el-button></router-link></span>
+      <span><router-link to='roleBinding-create'><el-button>创建</el-button></router-link></span>
     </p>
     <el-container v-for="item in nslist">
       <el-header>命名空间：{{ item.name }}</el-header>
@@ -30,7 +30,7 @@
           </el-table-column>
           <el-table-column label="用户">
             <template slot-scope="scope">
-              <el-tag type="info" v-for="sub in scope.row.subjects"> {{ sub.kind }} / {{ sub.name }} </el-tag>
+              <el-tag closable type="info" v-for="sub in scope.row.subjects"> {{ sub.kind }} / {{ sub.name }} </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="创建时间" width="160">
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { getRoleBindingList} from '@/api/roleBinding'
+import { getRoleBindingList, deleteRoleBinding } from '@/api/roleBinding'
 import { NewClient } from '@/utils/ws'
 import { getNsList } from '@/api/namespace'
 
@@ -133,7 +133,13 @@ export default {
   methods: {
     handleMore(command) {
       if (command[0] === 'drop') {
-
+        deleteRoleBinding(command[1].namespace, command[1].name).catch((err) => {
+          if (err.response) {
+            this.$message.error(err.response.data.error)
+          } else {
+            this.$message.error(err.message)
+          }
+        })
       }
     },
     changePage(ns, page) {
