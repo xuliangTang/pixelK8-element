@@ -236,7 +236,13 @@ export const constantRoutes = [
         name: 'Cluster-roles',
         component: () => import('@/views/rbac/clusterRoleList'),
         meta: {title: 'ClusterRoles', icon: 'table'}
-      }
+      },
+      {
+        path: 'rolebindings',
+        name: 'Rolebindings',
+        component: () => import('@/views/rbac/roleBindingList'),
+        meta: {title: 'RoleBindings', icon: 'table'}
+      },
     ]
   },
 
