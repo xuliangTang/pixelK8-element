@@ -24,3 +24,21 @@ export function deleteRoleBinding(ns, name) {
     method: 'delete'
   })
 }
+
+// 给roleBinding增加user
+export function addUserToRoleBinding(ns, name, data) {
+  return request({
+    url: '/v1/roleBinding/' + ns + '/' + name + '/user',
+    method: 'patch',
+    data
+  })
+}
+
+// 从roleBinding移除user
+export function removeUserFromRoleBinding(ns, name, data) {
+  return request({
+    url: '/v1/roleBinding/' + ns + '/' + name + '/user/remove',
+    method: 'patch',
+    data
+  })
+}
