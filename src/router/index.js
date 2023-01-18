@@ -232,6 +232,13 @@ export const constantRoutes = [
         hidden: true
       },
       {
+        path: 'role-show',
+        name: 'Role-show',
+        component: () => import('@/views/rbac/roleShow'),
+        meta: {title: 'Role详情', icon: 'table'},
+        hidden: true
+      },
+      {
         path: 'cluster-roles',
         name: 'Cluster-roles',
         component: () => import('@/views/rbac/clusterRoleList'),

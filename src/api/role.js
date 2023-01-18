@@ -16,11 +16,28 @@ export function getRoleAll(ns) {
   })
 }
 
+// 查看role
+export function showRole(ns, name) {
+  return request({
+    url: '/v1/role/' + ns + '/' + name,
+    method: 'get'
+  })
+}
+
 // 创建role
 export function createRole(data) {
   return request({
     url: '/v1/role',
     method: 'post',
+    data
+  })
+}
+
+// 编辑role
+export function updateRole(ns, name, data) {
+  return request({
+    url: '/v1/role/' + ns + '/' + name,
+    method: 'put',
     data
   })
 }
