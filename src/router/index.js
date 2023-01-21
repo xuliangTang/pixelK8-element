@@ -256,7 +256,13 @@ export const constantRoutes = [
         component: () => import('@/views/rbac/roleBindingCreate'),
         meta: {title: '编辑RoleBinding', icon: 'table'},
         hidden: true
-      }
+      },
+      {
+        path: 'serviceaccount',
+        name: 'Serviceaccount',
+        component: () => import('@/views/rbac/serviceAccountList'),
+        meta: {title: 'ServiceAccounts', icon: 'table'}
+      },
     ]
   },
 
