@@ -35,6 +35,7 @@
                   更多<i class="el-icon-caret-bottom el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="['showToken', scope.row]" class="clearfix">查看Token</el-dropdown-item>
                   <el-dropdown-item :command="['drop', scope.row]" class="clearfix">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -60,6 +61,7 @@
 import { getServiceAccountList, deleteServiceAccount } from '@/api/serviceAccount'
 import { NewClient } from '@/utils/ws'
 import { getNsList } from '@/api/namespace'
+import {showSecret} from "@/api/secret"
 
 export default {
   data() {
@@ -122,7 +124,15 @@ export default {
   },
   methods: {
     handleMore(command) {
-      if (command[0] === 'drop') {
+      if (command[0] === 'showToken') {
+        const secretName = command[1].secrets[0].name
+        showSecret(command[1].namespace, secretName).then(rsp => {
+          const token = rsp.data.data.data['token']
+          this.$alert('<textarea style="width: 100%" rows="10">' + window.atob(token) + '</textarea>', secretName, {
+            dangerouslyUseHTMLString: true
+          })
+        })
+      } else if (command[0] === 'drop') {
         deleteServiceAccount(command[1].namespace, command[1].name).catch((err) => {
           if (err.response) {
             this.$message.error(err.response.data.error)
