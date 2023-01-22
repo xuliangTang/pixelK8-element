@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { getClusterRoleList } from '@/api/clusterRole'
+import { getClusterRoleList, deleteClusterRole } from '@/api/clusterRole'
 import { NewClient } from '@/utils/ws'
 
 export default {
@@ -101,7 +101,13 @@ export default {
   methods: {
     handleMore(command) {
       if (command[0] === 'drop') {
-
+        deleteClusterRole(command[1].name).catch((err) => {
+          if (err.response) {
+            this.$message.error(err.response.data.error)
+          } else {
+            this.$message.error(err.message)
+          }
+        })
       }
     },
     changePage(page) {

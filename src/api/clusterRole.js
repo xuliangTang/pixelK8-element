@@ -33,3 +33,11 @@ export function updateClusterRole(name, data) {
     data
   })
 }
+
+// 删除clusterRole
+export function deleteClusterRole(name) {
+  return request({
+    url: '/v1/clusterRole/' + name,
+    method: 'delete'
+  })
+}
