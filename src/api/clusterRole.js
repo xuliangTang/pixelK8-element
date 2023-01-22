@@ -7,3 +7,29 @@ export function getClusterRoleList(page) {
     method: 'get'
   })
 }
+
+// 查看clusterRole
+export function showClusterRole(name) {
+  return request({
+    url: '/v1/clusterRole/' + name,
+    method: 'get'
+  })
+}
+
+// 创建clusterRole
+export function createClusterRole(data) {
+  return request({
+    url: '/v1/clusterRole',
+    method: 'post',
+    data
+  })
+}
+
+// 编辑clusterRole
+export function updateClusterRole(name, data) {
+  return request({
+    url: '/v1/clusterRole/' + name,
+    method: 'put',
+    data
+  })
+}

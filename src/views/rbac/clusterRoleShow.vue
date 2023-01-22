@@ -3,14 +3,25 @@
     <el-card class="box-card">
       <div class="header">
         <h1>
-          <router-link to="roles" class="primary">Role</router-link>
+          <router-link to="cluster-roles" class="primary">ClusterRole</router-link>
         </h1>
         <h1>: {{ name }}</h1>
-        <h1><router-link :to='"role-create?mode=edit&ns=" + ns + "&name=" + name'><el-button size="mini" icon="el-icon-edit" circle /></router-link></h1>
+        <h1><router-link :to='"clusterrole-create?mode=edit&name=" + name'><el-button size="mini" icon="el-icon-edit" circle /></router-link></h1>
       </div>
       <div class="sub-header">
-        <span>命名空间: {{ ns }}</span>
         <span>创建时间: {{ data.created_at }}</span>
+      </div>
+      <div class="sub-header">
+        <span>标签：<el-tag type="success" v-for="label in labelData"> {{ label.key }}={{ label.value }} </el-tag></span>
+      </div>
+      <div class="sub-header">
+        <div style="width: 100%">注解：<el-input
+          style="width: 80%;"
+          type="textarea"
+          autosize
+          disabled
+          v-model="annotationData">
+        </el-input></div>
       </div>
       <div class="tab-container">
         <el-form v-for="(rule) in rules" :inline="true" style="margin-top: 20px">
@@ -60,23 +71,23 @@
 
 </template>
 <script>
-import { showRole } from '@/api/role'
+import { showClusterRole } from '@/api/clusterRole'
 import { getResources } from '@/api/resource'
 const defaultVerbs = ['create', 'delete', 'get', 'list', 'patch', 'update', 'watch', 'deletecollection']
 export default {
   data() {
     return {
       resources: [],
-      ns: '',
       name: '',
       rules: [],
-      data: {}
+      data: {},
+      labelData: [],
+      annotationData: ''
     }
   },
   created() {
-    this.ns = this.$route.query.ns
     this.name = this.$route.query.name
-    if (this.ns && this.name) {
+    if (this.name) {
       getResources().then(rsp => {
         this.resources = rsp.data.data
         this.loadDetail()
@@ -85,36 +96,47 @@ export default {
   },
   methods: {
     loadDetail() {
-      showRole(this.ns, this.name).then(rsp => {
+      showClusterRole(this.name).then(rsp => {
         this.data = rsp.data.data
-        this.data.rules.forEach(rule => {
-          rule.apiGroups.forEach(group => {
-            // 每一个group要去 this.resources 中遍历，得到对应的verbs, 防止前端创建时乱填
-            rule.resources.forEach((res) => {
-              if (group === '*') { // 如果是 *  代表全部，这不作处理 直接加
-                this.rules.push({
-                  groupversion: '*:' + res,
-                  verbs: rule.verbs,
-                  verbscopy: defaultVerbs // 使用默认的全部权限列表
-                })
-                return
-              }
+        for (const key in rsp.data.data.labels) {
+          this.labelData.push(
+            { key, value: rsp.data.data.labels[key] }
+          )
+        }
+        for (const key in rsp.data.data.annotations) {
+          this.annotationData += key + '=' + rsp.data.data.annotations[key]
+        }
 
-              const getVerbs = this.getVerbsByGroupResource(group, res)
-              if (getVerbs.length > 0) {
-                // 取到的verbs 要和资源本身的verbs进行求交集，防止创建时瞎写
-                const rule_verbs = rule.verbs.filter(function(v) {
-                  return getVerbs.indexOf(v) !== -1
-                })
-                group = group === '' ? 'core' : group
-                this.rules.push({
-                  groupversion: group + ':' + res,
-                  verbs: rule_verbs,
-                  verbscopy: getVerbs // 存到复制品种
-                })
-              }
+        this.data.rules.forEach(rule => {
+          if (rule.apiGroups !== undefined) {
+            rule.apiGroups.forEach(group => {
+              // 每一个group要去 this.resources 中遍历，得到对应的verbs, 防止前端创建时乱填
+              rule.resources.forEach((res) => {
+                if (group === '*') { // 如果是 *  代表全部，这不作处理 直接加
+                  this.rules.push({
+                    groupversion: '*:' + res,
+                    verbs: rule.verbs,
+                    verbscopy: defaultVerbs // 使用默认的全部权限列表
+                  })
+                  return
+                }
+
+                const getVerbs = this.getVerbsByGroupResource(group, res)
+                if (getVerbs.length > 0) {
+                  // 取到的verbs 要和资源本身的verbs进行求交集，防止创建时瞎写
+                  const rule_verbs = rule.verbs.filter(function (v) {
+                    return getVerbs.indexOf(v) !== -1
+                  })
+                  group = group === '' ? 'core' : group
+                  this.rules.push({
+                    groupversion: group + ':' + res,
+                    verbs: rule_verbs,
+                    verbscopy: getVerbs // 存到复制品种
+                  })
+                }
+              })
             })
-          })
+          }
         })
       })
     },
