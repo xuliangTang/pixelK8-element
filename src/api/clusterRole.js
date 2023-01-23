@@ -8,6 +8,14 @@ export function getClusterRoleList(page) {
   })
 }
 
+// 获取全部clusterRole
+export function getClusterRoleAll() {
+  return request({
+    url: '/v1/clusterRoles/all',
+    method: 'get'
+  })
+}
+
 // 查看clusterRole
 export function showClusterRole(name) {
   return request({

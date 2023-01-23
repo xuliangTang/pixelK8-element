@@ -31,7 +31,7 @@
           <el-table-column label="用户">
             <template slot-scope="scope">
               <p>
-                <el-tag class="li" v-for="sub in scope.row.subjects" closable type="info" @close="rmUserFromBinding(scope.row.namespace,scope.row.name,sub.kind,sub.name)"> {{ sub.kind }} / {{ sub.name }} </el-tag>
+                <el-tag size="mini" class="li" v-for="sub in scope.row.subjects" closable type="info" @close="rmUserFromBinding(scope.row.namespace,scope.row.name,sub.kind,sub.name)"><span class="el-tag-content"> {{ sub.kind }} / {{ sub.name }} <span v-if="sub.namespace">({{ sub.namespace }})</span></span> </el-tag>
                 <span class="li"><el-button type="" size="mini" icon="el-icon-plus" circle @click="()=>showAdd(scope.$index,scope.row.namespace,scope.row.name)" /></span>
               </p>
 

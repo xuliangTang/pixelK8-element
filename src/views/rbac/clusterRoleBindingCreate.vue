@@ -8,21 +8,12 @@
         <el-form-item label="绑定名称">
           <el-input v-model="metadata.name" />
         </el-form-item>
-        <el-form-item label="命名空间">
-          <el-select v-model="metadata.namespace" @change="changeNs">
-            <el-option
-              v-for="ns in nslist "
-              :label="ns.name"
-              :value="ns.name"
-            />
-          </el-select>
-        </el-form-item>
         <el-form-item label="选择角色">
           <el-select v-model="roleRef.name">
             <el-option
-              v-for="role in rolelist "
-              :label="role.name"
-              :value="role.name"
+              v-for="clusterRole in clusterRoleList "
+              :label="clusterRole.name"
+              :value="clusterRole.name"
             />
           </el-select>
         </el-form-item>
@@ -32,6 +23,7 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>选择用户</span>
+        <p class="is-gray">提示:选择ServiceAccount时，格式为 namespace/name 这种形式</p>
         <el-form v-for="(sub,subindex) in subjects" :inline="true" style="margin-top: 20px">
           <el-form-item>
             <el-select
@@ -57,56 +49,60 @@
       </div>
 
       <el-button type="primary" icon="el-icon-plus" @click="addSubject">添加配置</el-button>
-      <el-button type="primary" @click="saveRoleBinding">保存</el-button>
+      <el-button type="primary" @click="saveClusterRoleBinding">保存</el-button>
     </el-card>
   </div>
 </template>
 <script>
-import { getNsList } from '@/api/namespace'
-import { getRoleAll } from '@/api/role'
-import { createRoleBinding } from '@/api/roleBinding'
+import { getClusterRoleAll } from '@/api/clusterRole'
+import { createClusterRoleBinding } from '@/api/clusterRoleBinding'
 
 export default {
   data() {
     return {
-      metadata: { name: '', namespace: 'default' },
-      nslist: [],
-      rolelist: [], // 切换ns后填充角色列表
-      roleRef: { kind: 'Role', name: '' },
-      subjects: [ // 前端所使用的rule
+      metadata: { name: '' },
+      clusterRoleList: [],
+      roleRef: { kind: 'ClusterRole', name: '' },
+      subjects: [
         { kind: 'User', name: '' }
       ]
     }
   },
   created() {
-    getNsList().then(rsp => {
-      this.nslist = rsp.data.data
-      this.loadRoleList()
-    })
+    this.loadClusterRoleList()
   },
   methods: {
-    changeNs(ns) {
-      this.roleRef.name = ''
-      this.loadRoleList()
-    },
-    loadRoleList() {
-      getRoleAll(this.metadata.namespace).then(rsp => {
-        this.rolelist = rsp.data.data
+    loadClusterRoleList() {
+      getClusterRoleAll().then(rsp => {
+        this.clusterRoleList = rsp.data.data
       })
     },
     addSubject() {
       this.subjects.unshift({ kind: 'User', name: '' })
     },
-
     rmSubject(index) {
       this.subjects.splice(index, 1)
     },
+    saveClusterRoleBinding() {
+      // clusterRoleBinding名称包含了namespace和name
+      const subjects = this.subjects
+      for (const i in subjects) {
+        if (subjects[i].kind === 'ServiceAccount') {
+          const g_name = subjects[i].name.split('/')
+          if (g_name.length > 1) {
+            subjects[i].name = g_name[1]
+            subjects[i].namespace = g_name[0]
+          } else {
+            subjects[i].name = g_name[0]
+            subjects[i].namespace = 'default'
+          }
+        }
+      }
 
-    saveRoleBinding() {
-      const postData = { metadata: this.metadata, subjects: this.subjects, roleRef: this.roleRef }
-      createRoleBinding(postData).then(rsp => {
+      const postData = { metadata: this.metadata, roleRef: this.roleRef, subjects }
+      createClusterRoleBinding(postData).then(rsp => {
         this.$router.push({
-          path: `rolebindings`
+          path: `clusterrolebindings`
         })
       }).catch((error) => {
         if (error.response) {
@@ -117,7 +113,5 @@ export default {
       })
     }
   }
-
 }
-
 </script>

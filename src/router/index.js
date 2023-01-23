@@ -272,6 +272,19 @@ export const constantRoutes = [
         hidden: true
       },
       {
+        path: 'clusterrolebindings',
+        name: 'Clusterrolebindings',
+        component: () => import('@/views/rbac/clusterRoleBindingList'),
+        meta: {title: 'ClusterRoleBindings', icon: 'table'}
+      },
+      {
+        path: 'clusterrolebinding-create',
+        name: 'Clusterrolebinding-create',
+        component: () => import('@/views/rbac/clusterRoleBindingCreate'),
+        meta: {title: '编辑ClusterRoleBinding', icon: 'table'},
+        hidden: true
+      },
+      {
         path: 'serviceaccount',
         name: 'Serviceaccount',
         component: () => import('@/views/rbac/serviceAccountList'),

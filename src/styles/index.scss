@@ -114,3 +114,13 @@ H1 {
   font-weight: 400;
   margin: 0 0 10px;
 }
+
+.el-tag .el-tag-content {
+  max-width: 210px;
+  overflow:hidden;
+  display: inline-block;
+}
+
+.el-tag .el-tag-content + i {
+  top: -6px;
+}
