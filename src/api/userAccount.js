@@ -24,3 +24,11 @@ export function deleteUserAccount(cn) {
     method: 'delete'
   })
 }
+
+// 获取userAccount的kubeconfig
+export function getKubeconfig(cn) {
+  return request({
+    url: '/v1/userAccount/' + cn + '/kubeconfig',
+    method: 'get'
+  })
+}

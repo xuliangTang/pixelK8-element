@@ -295,6 +295,13 @@ export const constantRoutes = [
         name: 'Useraccount',
         component: () => import('@/views/rbac/userAccountList'),
         meta: {title: 'UserAccounts', icon: 'table'}
+      },
+      {
+        path: 'kubeconfig-show',
+        name: 'Kubeconfig-show',
+        component: () => import('@/views/rbac/kubeconfigShow'),
+        meta: {title: '查看kubeconfig', icon: 'table'},
+        hidden: true
       }
     ]
   },

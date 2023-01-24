@@ -30,18 +30,19 @@
           <p>{{ scope.row.name }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" width="160">
+      <el-table-column label="创建时间">
         <template slot-scope="scope">
           {{ scope.row.created_at }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="70">
+      <el-table-column label="操作">
         <template slot-scope="scope">
           <el-dropdown trigger="click" @command="handleMore">
             <el-button type="text" size="mini">
               更多<i class="el-icon-caret-bottom el-icon--right" />
             </el-button>
             <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item :command="['kubeconfig', scope.row]" class="clearfix">查看kubeconfig</el-dropdown-item>
               <el-dropdown-item :command="['drop', scope.row]" class="clearfix">删除</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -110,6 +111,10 @@ export default {
           } else {
             this.$message.error(err.message)
           }
+        })
+      } else if (command[0] === 'kubeconfig') {
+        this.$router.push({
+          path: `kubeconfig-show?cn=` + command[1].name
         })
       }
     },
