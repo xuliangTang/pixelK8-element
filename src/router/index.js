@@ -290,6 +290,12 @@ export const constantRoutes = [
         component: () => import('@/views/rbac/serviceAccountList'),
         meta: {title: 'ServiceAccounts', icon: 'table'}
       },
+      {
+        path: 'useraccount',
+        name: 'Useraccount',
+        component: () => import('@/views/rbac/userAccountList'),
+        meta: {title: 'UserAccounts', icon: 'table'}
+      }
     ]
   },
 

@@ -81,6 +81,7 @@ import { NewClient } from '@/utils/ws'
 export default {
   data() {
     return {
+      listLoading: true,
       wsClient: null,
       clusterRoleBindingList: null,
       pages: 1,
