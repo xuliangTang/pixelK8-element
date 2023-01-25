@@ -1,10 +1,10 @@
 <template>
   <div class="yaml-editor">
-    <textarea ref="yamltext"></textarea>
+    <textarea ref="yamltext" />
   </div>
 </template>
 <script>
-import { getKubeconfig } from '@/api/userAccount'
+
 import CodeMirror from 'codemirror'
 import 'codemirror/addon/lint/lint.css'
 import 'codemirror/lib/codemirror.css'
@@ -14,20 +14,27 @@ import 'codemirror/addon/lint/lint'
 import 'codemirror/addon/lint/yaml-lint'
 window.jsyaml = require('js-yaml')
 export default {
+  props: ['deployment'],
   data() {
     return {
-      yaml_text: '',
+      yaml_text: '', // 传过来的yaml内容
       yamlEditor: null // 编辑器对象
     }
   },
-  mounted() {
-    const user = this.$route.query.cn
-    if (user) {
-      getKubeconfig(user).then(rsp => {
-        this.yaml_text = rsp.data.data
-        this.initYaml()
-      })
+
+  watch: {
+    deployment: {
+      handler(newValue, oldValue) {
+        this.yaml_text = window.jsyaml.dump(this.$props.deployment)
+        this.yamlEditor.setValue(this.yaml_text)
+      },
+      deep: true // 为true，表示深度监听
     }
+  },
+  mounted() {
+    this.initYaml()
+    this.yaml_text = window.jsyaml.dump(this.$props.deployment)
+    this.yamlEditor.setValue(this.yaml_text)
   },
   methods: {
     initYaml() {
@@ -40,7 +47,7 @@ export default {
         lint: true // 开启语法检查
       })
 
-      this.yamlEditor.setValue(this.yaml_text) // 对编辑器设置值
+      // 对编辑器设置值
     }
   }
 }

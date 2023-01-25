@@ -124,3 +124,20 @@ H1 {
 .el-tag .el-tag-content + i {
   top: -6px;
 }
+
+.yaml-editor{
+  height: 80% !important;
+  position: relative;
+}
+.yaml-editor  .CodeMirror {
+  height: auto;
+  max-height: 500px !important;
+  //min-height: 300px;
+}
+.yaml-editor  .CodeMirror-scroll{
+  max-height: 500px !important;
+  //min-height: 300px;
+}
+.yaml-editor .cm-s-rubyblue span.cm-string {
+  color: #F08047;
+}

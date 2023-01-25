@@ -15,3 +15,11 @@ export function deleteDeployment(ns, name) {
     method: 'delete'
   })
 }
+
+// 查看deployment
+export function showDeployment(ns, name) {
+  return request({
+    url: '/v1/deployment/' + ns + '/' + name,
+    method: 'get'
+  })
+}

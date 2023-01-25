@@ -68,7 +68,7 @@ export default {
 
   margin:10px auto;
   min-height: 200px;
-  max-height: 680px;
+  max-height: 500px;
   border: solid 1px black;
   background-color: #454545;
   padding: 10px;

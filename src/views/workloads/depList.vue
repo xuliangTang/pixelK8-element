@@ -23,7 +23,7 @@
           </el-table-column>
           <el-table-column label="名称">
             <template slot-scope="scope">
-              {{ scope.row.name }}
+              <router-link :to='"deployment-create?ns=" + scope.row.namespace + "&name=" + scope.row.name'><el-link type="primary">{{ scope.row.name }}</el-link></router-link>
             </template>
           </el-table-column>
           <el-table-column label="镜像">

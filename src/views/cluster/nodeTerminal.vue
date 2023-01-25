@@ -13,7 +13,7 @@ export default {
     return {
       nodeName: '',
 
-      rows: 40,
+      rows: 30,
       cols: 100,
       term: null, // 终端对象
       ws: null, // ws 客户端
