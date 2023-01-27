@@ -4,9 +4,6 @@
       <div slot="header" class="clearfix">
         <span>metadata设置 </span>
       </div>
-      <div v-show="$parent.tips">
-        metadata:元数据，包含name、namespace、labels(标签)等设置
-      </div>
       <div>
         <el-form :inline="true">
           <el-form-item label="名称">
@@ -55,6 +52,7 @@ export default {
   data() {
     return {
       metadata: { name: '', namespace: 'default', labels: {}, _labels: [] },
+      store: { labels: [] },
       nslist: [] // ns列表
     }
   },

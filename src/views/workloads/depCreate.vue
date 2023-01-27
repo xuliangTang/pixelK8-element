@@ -2,9 +2,14 @@
   <div>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>基本配置</span>
+        <span>基本配置<el-switch
+          v-model="tips"
+          class="li"
+        >
+        </el-switch><span class="is-gray li">tips</span></span>
       </div>
       <MetaDataConfig ref="metaData" @Update="UpdateObject" />
+      <SpecConfig ref="specData" @Update="UpdateObject" />
     </el-card>
     <div>
       <DeployYaml :deployment="deployment" />
@@ -21,11 +26,12 @@ import { showDeployment } from '@/api/deployments'
 export default {
   components: {
     DeployYaml,
-    MetaDataConfig: () => import('./depMetadata')
+    MetaDataConfig: () => import('./depMetadata'),
+    SpecConfig:()=> import('./depSpecdata')
   },
   data() {
     return {
-      deployment: { apiVersion: 'apps/v1', Kind: 'Deployment', metadata: { name: '', namespace: 'default', labels: {}}},
+      deployment: { apiVersion: 'apps/v1', Kind: 'Deployment', metadata: { name: '', namespace: 'default', labels: {}}, spec: {}},
       tips: false,
       isUpdate: false,
       ns: '',
@@ -44,6 +50,7 @@ export default {
 
         this.isUpdate = true
         this.$refs.metaData.setObject(this.deployment.metadata)
+        this.$refs.specData.setObject(this.deployment.spec)
       })
     }
   },
