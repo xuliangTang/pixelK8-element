@@ -2,10 +2,13 @@
   <div>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>metadata设置 </span>
+        <span>metadata设置 <Expand :expand.sync="expand"/></span>
       </div>
-      <div>
-        <el-form :inline="true">
+      <div v-show="expand">
+        <span v-show="$parent.$parent.tips" class="is-gray">
+          元数据，包含name、namespace、labels(标签)等设置
+        </span>
+        <el-form :inline="true" style="margin-top: 10px">
           <el-form-item label="名称">
             <el-input v-model="metadata.name" placeholder="deployment名称" />
           </el-form-item>
@@ -49,10 +52,13 @@ function copyObject(obj) {
   return JSON.parse(str)
 }
 export default {
+  components: {
+    Expand: () => import('./cardExpand')
+  },
   data() {
     return {
       metadata: { name: '', namespace: 'default', labels: {}, _labels: [] },
-      store: { labels: [] },
+      expand: true,
       nslist: [] // ns列表
     }
   },

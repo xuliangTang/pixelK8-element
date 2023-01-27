@@ -9,7 +9,7 @@
         </el-switch><span class="is-gray li">tips</span></span>
       </div>
       <MetaDataConfig ref="metaData" @Update="UpdateObject" />
-      <SpecConfig ref="specData" @Update="UpdateObject" />
+      <SpecConfig ref="specData" :tips="tips" @Update="UpdateObject" />
     </el-card>
     <div>
       <DeployYaml :deployment="deployment" />
@@ -27,7 +27,7 @@ export default {
   components: {
     DeployYaml,
     MetaDataConfig: () => import('./depMetadata'),
-    SpecConfig:()=> import('./depSpecdata')
+    SpecConfig: () => import('./depSpecdata')
   },
   data() {
     return {
