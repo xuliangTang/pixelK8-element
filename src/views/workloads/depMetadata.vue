@@ -8,7 +8,7 @@
         <span v-show="$parent.$parent.tips" class="is-gray">
           元数据，包含name、namespace、labels(标签)等设置
         </span>
-        <el-form :inline="true" style="margin-top: 10px">
+        <el-form v-show="!this.labels" :inline="true">
           <el-form-item label="名称">
             <el-input v-model="metadata.name" placeholder="deployment名称" />
           </el-form-item>
@@ -26,7 +26,7 @@
           <div slot="header" class="clearfix">
             <span>标签 <i class="ii el-icon-circle-plus" @click="addLabel" />  </span>
           </div>
-          <el-form v-for="(label,index) in metadata._labels" :inline="true" style="margin-top: 10px">
+          <el-form v-for="(label,index) in store.labels" :inline="true" style="margin-top: 10px">
             <el-form-item>
               <el-input v-model="label.key" placeholder="填写key" style="width: 250px" @input="parseLabel" />
             </el-form-item>
@@ -55,17 +55,31 @@ export default {
   components: {
     Expand: () => import('./cardExpand')
   },
+  props: ['data', 'tips', 'labels'],
   data() {
     return {
-      metadata: { name: '', namespace: 'default', labels: {}, _labels: [] },
+      metadata: { name: '', namespace: 'default', labels: {}},
+      store: { labels: [] },
       expand: true,
       nslist: [] // ns列表
     }
   },
   watch: {
+    data: {
+      handler: function(newVal, oldVal) {
+        this.metadata = newVal
+        this.unParseLabel()
+      },
+      deep: true
+    },
     metadata: {
       handler: function(newVal, oldVal) {
-        this.$emit('Update', 'metadata', newVal)
+        console.log(this.labels)
+        if (this.labels) { // 只显示标签
+          delete newVal.name
+          delete newVal.namespace
+        }
+        this.$emit('update:data', newVal)
       },
       deep: true
       // immediate: true
@@ -78,33 +92,33 @@ export default {
   },
   methods: {
     checkProp() { // 对于一些自定的属性要做初始化检查
-      if (this.metadata._labels === undefined) { // 对于编辑数据，此项 没有值，因此要做处理
-        this.$set(this.metadata, '_labels', [])
+      if (this.metadata.labels === undefined) {
+        this.metadata.labels = {}
       }
-      if (this.metadata.labels === undefined) this.metadata.labels = {}
     },
     addLabel() {
       this.checkProp()
-      this.metadata._labels.push({ key: '', value: '' })
+      this.store.labels.push({ key: '', value: '' })
+      console.log(this.store.labels)
     },
     rmLabel(index) {
-      this.metadata._labels.splice(index, 1)
-      this.parseLabel()
+      this.store.labels.splice(index,1)
     },
     unParseLabel() {
       // 编辑状态下 需要解析 labels对象 为 _labels数组
       this.checkProp()
+      this.store.labels = []
       for (const key in this.metadata.labels) {
-        this.metadata._labels.push({ key, value: this.metadata.labels[key] })
+        this.store.labels.push({ key, value: this.metadata.labels[key] })
       }
     },
     parseLabel() {
       // 把_labels数组解析为 label对象
       this.checkProp()
       this.metadata.labels = {} // 清空
-      for (let i = 0; i < this.metadata._labels.length; i++) {
-        if (this.metadata._labels[i].key === '') continue
-        this.metadata.labels[this.metadata._labels[i].key] = this.metadata._labels[i].value
+      for (let i = 0; i < this.store.labels.length; i++) {
+        if (this.store.labels[i].key === '') continue
+        this.metadata.labels[this.store.labels[i].key] = this.store.labels[i].value
       }
     },
     setObject(v) {

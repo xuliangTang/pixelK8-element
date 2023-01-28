@@ -13,6 +13,7 @@
             </el-form-item>
             <MatchLabels :data.sync="spec.selector.matchLabels" :tips="tips" ref="matchLabels" />
             <MatchExprs :data.sync="spec.selector.matchExpressions" :tips="tips" ref="matchExprs" />
+            <TplConfig :data.sync="spec.template" :tips="tips" />
           </el-form>
         </div>
       </div>
@@ -22,19 +23,26 @@
 <script>
 
 export default {
-  props: ['tips'],
   components: {
     Expand: () => import('./cardExpand'),
     MatchLabels: () => import('@/components/Deploy/spec-selector-matchlabels.vue'),
-    MatchExprs: () => import('@/components/Deploy/spec-selector-matchexprs.vue')
+    MatchExprs: () => import('@/components/Deploy/spec-selector-matchexprs.vue'),
+    TplConfig: () => import('./depSpecTemplate.vue')
   },
+  props: ['tips', 'data'],
   data() {
     return {
-      spec: { replicas: 1, selector: {}},
+      spec: { replicas: 1, selector: {}, template:{}},
       expand: true
     }
   },
   watch: {
+    data: {
+      handler: function(newVal, oldVal) {
+        this.spec = newVal
+      },
+      deep: true
+    },
     spec: {
       handler: function(newVal, oldVal) {
         this.$emit('Update', 'spec', newVal)
