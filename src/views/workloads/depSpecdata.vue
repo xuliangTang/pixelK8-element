@@ -11,8 +11,8 @@
               <el-input-number v-model="spec.replicas" :min="1" :max="20" label="副本数" />
               <span v-show="tips" class="is-gray">deployment重要特性，来控制正常运行时pod的数量和期望保持一致</span>
             </el-form-item>
-            <MatchLabels :data.sync="spec.selector.matchLabels" :tips="tips" ref="matchLabels" />
-            <MatchExprs :data.sync="spec.selector.matchExpressions" :tips="tips" ref="matchExprs" />
+            <MatchLabels :data.sync="spec.selector.matchLabels" :tips="tips" />
+            <MatchExprs :data.sync="spec.selector.matchExpressions" :tips="tips" />
             <TplConfig :data.sync="spec.template" :tips="tips" />
           </el-form>
         </div>
@@ -32,7 +32,7 @@ export default {
   props: ['tips', 'data'],
   data() {
     return {
-      spec: { replicas: 1, selector: {}, template:{}},
+      spec: { replicas: 1, selector: {}},
       expand: true
     }
   },
@@ -45,7 +45,7 @@ export default {
     },
     spec: {
       handler: function(newVal, oldVal) {
-        this.$emit('Update', 'spec', newVal)
+        this.$emit('update:data', newVal)
       },
       deep: true
     }
@@ -54,10 +54,10 @@ export default {
 
   },
   methods: {
-    setObject(v) {
+    /* setObject(v) {
       this.$refs.matchLabels.setObject(v.selector.matchLabels)
       this.$refs.matchExprs.setObject(v.selector.matchExpressions)
-    }
+    }*/
     /* // 用于设置一些初始值
     setInitValue(obj, key, v) {
       if (obj[key] === undefined) { obj[key] = v }

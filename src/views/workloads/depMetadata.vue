@@ -2,10 +2,10 @@
   <div>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>metadata设置 <Expand :expand.sync="expand"/></span>
+        <span>metadata设置 <Expand :expand.sync="expand" /></span>
       </div>
       <div v-show="expand">
-        <span v-show="$parent.$parent.tips" class="is-gray">
+        <span v-show="tips" class="is-gray">
           元数据，包含name、namespace、labels(标签)等设置
         </span>
         <el-form v-show="!this.labels" :inline="true">
@@ -47,10 +47,6 @@
 </template>
 <script>
 import { getNsList } from '@/api/namespace'
-function copyObject(obj) {
-  const str = JSON.stringify(obj)
-  return JSON.parse(str)
-}
 export default {
   components: {
     Expand: () => import('./cardExpand')
@@ -74,7 +70,6 @@ export default {
     },
     metadata: {
       handler: function(newVal, oldVal) {
-        console.log(this.labels)
         if (this.labels) { // 只显示标签
           delete newVal.name
           delete newVal.namespace
@@ -99,10 +94,10 @@ export default {
     addLabel() {
       this.checkProp()
       this.store.labels.push({ key: '', value: '' })
-      console.log(this.store.labels)
     },
     rmLabel(index) {
-      this.store.labels.splice(index,1)
+      this.store.labels.splice(index, 1)
+      this.parseLabel()
     },
     unParseLabel() {
       // 编辑状态下 需要解析 labels对象 为 _labels数组
@@ -120,10 +115,6 @@ export default {
         if (this.store.labels[i].key === '') continue
         this.metadata.labels[this.store.labels[i].key] = this.store.labels[i].value
       }
-    },
-    setObject(v) {
-      this.metadata = copyObject(v)
-      this.unParseLabel()
     },
     output() {
       return ''

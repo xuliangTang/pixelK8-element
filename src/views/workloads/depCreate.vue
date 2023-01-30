@@ -8,8 +8,8 @@
         >
         </el-switch><span class="is-gray li">tips</span></span>
       </div>
-      <MetaDataConfig ref="metaData" :data.sync="deployment.metadata" @Update="UpdateObject" />
-      <SpecConfig ref="specData" :data.sync="deployment.spec" :tips="tips" @Update="UpdateObject" />
+      <MetaDataConfig :data.sync="deployment.metadata" :tips="tips" />
+      <SpecConfig :data.sync="deployment.spec" :tips="tips" />
     </el-card>
     <div>
       <DeployYaml :deployment="deployment" />
@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      deployment: { apiVersion: 'apps/v1', Kind: 'Deployment', metadata: { name: '', namespace: 'default', labels: {}}, spec: {}},
+      deployment: { apiVersion: 'apps/v1', Kind: 'Deployment', metadata: {}, spec: {}},
       tips: false,
       isUpdate: false,
       ns: '',
@@ -41,23 +41,25 @@ export default {
   created() {
     this.ns = this.$route.query.ns
     this.name = this.$route.query.name
-    if (this.ns && this.name) {
+    if (this.$route.query.mode === 'edit' && this.ns && this.name) {
       showDeployment(this.ns, this.name).then(rsp => {
-        this.deployment = rsp.data.data
-        if (this.deployment.metadata.labels === undefined) {
-          this.deployment.metadata.labels = {}
+        const rspData = rsp.data.data
+        if (rspData.metadata.labels === undefined) {
+          rspData.metadata.labels = {}
         }
 
+        this.deployment = rspData
         this.isUpdate = true
-        this.$refs.metaData.setObject(this.deployment.metadata)
-        this.$refs.specData.setObject(this.deployment.spec)
+
+        /* this.$refs.metaData.setObject(this.deployment.metadata)
+        this.$refs.specData.setObject(this.deployment.spec)*/
       })
     }
   },
   methods: {
-    UpdateObject(key, value) {
+    /* UpdateObject(key, value) {
       this.$set(this.deployment, key, value)
-    }
+    }*/
   }
 }
 </script>

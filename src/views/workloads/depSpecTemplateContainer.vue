@@ -21,6 +21,23 @@
                 <el-form-item>
                   <el-button type="danger" size="mini" icon="el-icon-minus" circle @click="containers.splice(cindex,1)" />
                 </el-form-item>
+                <el-form-item label="端口设置" style="width: 100%">
+                  <el-form-item>
+                    <i
+                      class="ii el-icon-circle-plus"
+                      @click="containers[cindex].ports.push({name:'httpport',containerPort:80})"
+                    />
+                  </el-form-item>
+                  <el-form v-for="(port,portindex) in item.ports">
+                    <el-form-item label="名称">
+                      <el-input v-model="port.name" />
+                    </el-form-item>
+                    <el-form-item label="容器端口">
+                      <el-input-number v-model="port.containerPort" />
+                      <span v-show="tips">一般填程序监听的端口</span>
+                    </el-form-item>
+                  </el-form>
+                </el-form-item>
               </el-form>
             </el-form-item>
           </el-form>
@@ -32,17 +49,22 @@
 <script>
 export default {
   components: {
-    Expand: () => import('./cardExpand.vue'),
-    MetaData: () => import('./depMetadata.vue')
+    Expand: () => import('./cardExpand.vue')
   },
   props: ['data', 'tips'],
   data() {
     return {
-      containers: [{ name: '', image: '', ports: [] }], //
+      containers: [{ name: '', image: '', ports: [] }],
       expand: true
     }
   },
   watch: {
+    data: {
+      handler: function(newVal, oldVal) {
+        this.containers = newVal
+      },
+      deep: true
+    },
     containers: {
       handler: function(newVal, oldVal) {
         this.$emit('update:data', newVal)

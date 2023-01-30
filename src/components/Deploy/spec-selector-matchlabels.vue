@@ -21,10 +21,6 @@
   </el-card>
 </template>
 <script>
-function copyObject(obj) {
-  const str = JSON.stringify(obj)
-  return JSON.parse(str)
-}
 export default {
   props: ['data', 'tips'],
   data() {
@@ -34,6 +30,13 @@ export default {
     }
   },
   watch: {
+    data: {
+      handler: function(newVal, oldVal) {
+        this.matchLabels = newVal
+        this.unParseSlice()
+      },
+      deep: true
+    },
     matchLabels: {
       handler(newVal, oldVal) {
         this.$emit('update:data', newVal)
@@ -46,15 +49,9 @@ export default {
     this.unParseSlice()
   },
   methods: {
-    setObject(v) {
-      if (v !== undefined) {
-        this.matchLabels = copyObject(v)
-        this.unParseSlice()
-      }
-    },
     addSlice() {
       this.matchLabels_array.push({ key: '', value: '' })
-      this.parseSlice()
+      // this.parseSlice()
     },
     parseSlice() { // 把数据解析为对象
       this.matchLabels = {}

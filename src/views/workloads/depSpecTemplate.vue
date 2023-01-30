@@ -22,11 +22,17 @@ export default {
   props: ['data', 'tips'],
   data() {
     return {
-      template: { metadata: {}, spec: {}}, //
+      template: { metadata: {}, spec: { containers: [] }},
       expand: true
     }
   },
   watch: {
+    data: {
+      handler: function(newVal, oldVal) {
+        this.template = newVal
+      },
+      deep: true
+    },
     template: {
       handler: function(newVal, oldVal) {
         this.$emit('update:data', newVal)
