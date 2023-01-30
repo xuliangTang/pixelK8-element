@@ -6,7 +6,8 @@
       </div>
       <div v-show="expand">
         <MetaData labels="true" :data.sync="template.metadata" :tips="tips" />
-        <Container :data.sync="template.spec.containers" :tips="tips" />
+        <Container defaultname="init" title="Init容器" :data.sync="template.spec.initContainers" :tips="tips" />
+        <Container defaultname="container" title="业务容器" :data.sync="template.spec.containers" :tips="tips" />
       </div>
 
     </el-card>

@@ -2,8 +2,8 @@
   <div>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>容器配置
-          <i class="ii el-icon-circle-plus" @click="containers.push({name:'',image:'',ports:[]})" />
+        <span>{{ title }}
+          <i class="ii el-icon-circle-plus" @click="containers.push({name:getDefaultName(1),image:'',ports:[]})" />
           <Expand class="li" :expand.sync="expand" />
         </span>
       </div>
@@ -25,7 +25,7 @@
                   <el-form-item>
                     <i
                       class="ii el-icon-circle-plus"
-                      @click="containers[cindex].ports.push({name:'httpport',containerPort:80})"
+                      @click="containers[cindex].ports.push({name:getDefaultName(2, cindex),containerPort:80})"
                     />
                   </el-form-item>
                   <el-form v-for="(port,portindex) in item.ports">
@@ -36,6 +36,15 @@
                       <el-input-number v-model="port.containerPort" />
                       <span v-show="tips">一般填程序监听的端口</span>
                     </el-form-item>
+                    <el-form-item>
+                      <el-button type="danger" size="mini" icon="el-icon-minus" circle @click="item.ports.splice(portindex,1)" />
+                    </el-form-item>
+                  </el-form>
+                </el-form-item>
+
+                <el-form-item label="入口(command)" style="width: 100%;margin-top: 20px">
+                  <el-form label="入口(command)">
+                    <ArrayInput split=" " :data.sync="item.command" input_width="400px" />
                   </el-form>
                 </el-form-item>
               </el-form>
@@ -47,14 +56,17 @@
   </div>
 </template>
 <script>
+import ArrayInput from '@/components/Common/ArrayInput.vue'
+
 export default {
   components: {
+    ArrayInput,
     Expand: () => import('./cardExpand.vue')
   },
-  props: ['data', 'tips'],
+  props: ['data', 'tips', 'title', 'defaultname'],
   data() {
     return {
-      containers: [{ name: '', image: '', ports: [] }],
+      containers: [], // { name: '', image: '', ports: [] }
       expand: true
     }
   },
@@ -76,7 +88,13 @@ export default {
 
   },
   methods: {
+    getDefaultName(t, cindex) {
+      if (t === 1) { // 代表是容器 ,这不考虑cindex
+        return this.defaultname + this.containers.length
+      } else {
+        return this.defaultname + 'port' + this.containers[cindex].ports.length
+      }
+    }
   }
-
 }
 </script>
