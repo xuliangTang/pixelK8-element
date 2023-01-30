@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <p>Deployment总数: {{ countDep() }} 就绪：{{ countReadyDep() }}</p>
+    <p>
+      <span><router-link to='deployment-create'><el-button>创建</el-button></router-link></span>
+    </p>
     <el-container v-for="item in nslist" >
       <el-header>命名空间：{{ item.name }}</el-header>
       <el-main>

@@ -15,13 +15,14 @@
       <DeployYaml :deployment="deployment" />
     </div>
     <div style="text-align: center;margin-top: 20px">
-      <el-button type="primary">保存</el-button>
+      <el-button type="primary" @click="postDeploy">保存</el-button>
     </div>
   </div>
 </template>
 <script>
 import DeployYaml from './depYaml'
-import { showDeployment } from '@/api/deployments'
+import { showDeployment, createDeployment, updateDeployment } from '@/api/deployments'
+import { clearEmptyObject } from '@/utils/helper'
 
 export default {
   components: {
@@ -57,6 +58,33 @@ export default {
     }
   },
   methods: {
+    postDeploy() {
+      if (this.isUpdate) {
+        updateDeployment(this.ns, clearEmptyObject(this.deployment)).then(rsp => {
+          this.$router.push({
+            path: `deployments`
+          })
+        }).catch((error) => {
+          if (error.response) {
+            this.$message.error(error.response.data.error)
+          } else {
+            this.$message.error(error.message)
+          }
+        })
+      } else {
+        createDeployment(clearEmptyObject(this.deployment)).then(rsp => {
+          this.$router.push({
+            path: `deployments`
+          })
+        }).catch((error) => {
+          if (error.response) {
+            this.$message.error(error.response.data.error)
+          } else {
+            this.$message.error(error.message)
+          }
+        })
+      }
+    }
     /* UpdateObject(key, value) {
       this.$set(this.deployment, key, value)
     }*/

@@ -1,5 +1,23 @@
 import request from '@/utils/myRequest'
 
+// 创建deployment
+export function createDeployment(data) {
+  return request({
+    url: '/v1/deployment',
+    method: 'post',
+    data
+  })
+}
+
+// 编辑deployment
+export function updateDeployment(ns, data) {
+  return request({
+    url: '/v1/deployment/' + ns,
+    method: 'put',
+    data
+  })
+}
+
 // 获取deployments列表
 export function getDeploymentList(ns, page) {
   return request({
