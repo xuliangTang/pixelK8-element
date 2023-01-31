@@ -52,6 +52,10 @@
                     <ArrayInput split=" " :data.sync="item.args" input_width="400px" />
                   </el-form>
                 </el-form-item>
+
+                <el-form-item v-show="!fastmod" label="健康检查配置" style="width: 100%;margin-top: 20px">
+                  <Liveness :data.sync="item.livenessProbe" :tips="tips" />
+                </el-form-item>
               </el-form>
             </el-form-item>
           </el-form>
@@ -66,9 +70,10 @@ import ArrayInput from '@/components/Common/ArrayInput.vue'
 export default {
   components: {
     ArrayInput,
-    Expand: () => import('./cardExpand.vue')
+    Expand: () => import('./cardExpand.vue'),
+    Liveness: () => import('@/components/Deploy/container-liveness')
   },
-  props: ['data', 'tips', 'title', 'defaultname'],
+  props: ['data', 'tips', 'title', 'defaultname', 'fastmod'],
   data() {
     return {
       containers: [], // { name: '', image: '', ports: [] }

@@ -7,7 +7,7 @@
       <div v-show="expand">
         <MetaData v-show="!fastmod" labels="true" :data.sync="template.metadata" :tips="tips" />
         <Container v-show="!fastmod" defaultname="init" title="Init容器" :data.sync="template.spec.initContainers" :tips="tips" />
-        <Container defaultname="container" title="业务容器" :data.sync="template.spec.containers" :tips="tips" />
+        <Container :fastmod="fastmod" defaultname="container" title="业务容器" :data.sync="template.spec.containers" :tips="tips" />
       </div>
 
     </el-card>
