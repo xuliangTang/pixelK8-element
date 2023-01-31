@@ -1,7 +1,7 @@
 <template>
   <el-form-item>
     <el-form style="width: 100%;margin-left: 10px;border:solid 1px #ddd;padding:10px">
-      <el-form-item>
+      <el-form-item :label="title">
         <el-switch
           v-model="enable"
           active-text="开启"
@@ -23,9 +23,13 @@
         <el-input-number v-model="livenessProbe.initialDelaySeconds" :min="0" />
         <span v-show="tips" class="is-gray li">执行第一次探测前应该等待的秒数</span>
       </el-form-item>
-      <el-form-item v-show="enable" label="探测周期">
+      <el-form-item v-show="enable" label="探测周期" style="width: 100%;margin-bottom: 10px">
         <el-input-number v-model="livenessProbe.periodSeconds" :min="0" />
         <span v-show="tips" class="is-gray li">每多少秒执行一次存活探测</span>
+      </el-form-item>
+      <el-form-item v-show="enable" label="探测超时" style="width: 100%;margin-bottom: 10px">
+        <el-input-number v-model="livenessProbe.timeoutSeconds" :min="1" />
+        <span v-show="tips" class="is-gray li">探测超时时间，默认1秒，最小1</span>
       </el-form-item>
     </el-form>
   </el-form-item>
@@ -38,7 +42,7 @@ export default {
     LivenessExec: () => import('@/components/Deploy/container-liveness-exec'),
     LivenessHttp: () => import('@/components/Deploy/container-liveness-http')
   },
-  props: ['data', 'tips'],
+  props: ['data', 'tips', 'title'],
   data() {
     return {
       livenessProbe: {

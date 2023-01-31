@@ -54,7 +54,8 @@
                 </el-form-item>
 
                 <el-form-item v-show="!fastmod" label="健康检查配置" style="width: 100%;margin-top: 20px">
-                  <Liveness :data.sync="item.livenessProbe" :tips="tips" />
+                  <Liveness :data.sync="item.livenessProbe" :tips="tips" title="存活检查" />
+                  <Liveness :data.sync="item.readinessProbe" :tips="tips" title="就绪检查" />
                 </el-form-item>
               </el-form>
             </el-form-item>
