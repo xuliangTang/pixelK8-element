@@ -1,9 +1,9 @@
 import request from '@/utils/myRequest'
 
 // 创建deployment
-export function createDeployment(data) {
+export function createDeployment(data, fastmod) {
   return request({
-    url: '/v1/deployment',
+    url: '/v1/deployment?fastmod=' + fastmod,
     method: 'post',
     data
   })

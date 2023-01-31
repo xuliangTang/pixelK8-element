@@ -25,7 +25,7 @@
                   <el-form-item>
                     <i
                       class="ii el-icon-circle-plus"
-                      @click="containers[cindex].ports.push({name:getDefaultName(2, cindex),containerPort:80})"
+                      @click="addPort(cindex)"
                     />
                   </el-form-item>
                   <el-form v-for="(port,portindex) in item.ports">
@@ -37,7 +37,7 @@
                       <span v-show="tips">一般填程序监听的端口</span>
                     </el-form-item>
                     <el-form-item>
-                      <el-button type="danger" size="mini" icon="el-icon-minus" circle @click="item.ports.splice(portindex,1)" />
+                      <el-button type="danger" size="mini" icon="el-icon-minus" circle @click="rmPort(item, portindex)" />
                     </el-form-item>
                   </el-form>
                 </el-form-item>
@@ -94,6 +94,17 @@ export default {
       } else {
         return this.defaultname + 'port' + this.containers[cindex].ports.length
       }
+    },
+    addPort(cindex) {
+      if (this.containers[cindex].ports === undefined) {
+        this.containers[cindex].ports = []
+      }
+      this.containers[cindex].ports.push({ name: this.getDefaultName(2, cindex), containerPort: 80 })
+      this.$forceUpdate()
+    },
+    rmPort(item, portindex) {
+      item.ports.splice(portindex, 1)
+      this.$forceUpdate()
     }
   }
 }

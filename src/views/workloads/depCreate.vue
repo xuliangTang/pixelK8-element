@@ -2,14 +2,20 @@
   <div>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>基本配置<el-switch
-          v-model="tips"
-          class="li"
-        >
-        </el-switch><span class="is-gray li">tips</span></span>
+        <span>基本配置
+          <el-switch
+            v-model="tips"
+            class="li"
+          /><span class="is-gray li">tips</span></span>
+        <el-switch
+          v-model="fastmod"
+          style="margin-left: 50px"
+          active-text="快捷模式"
+          inactive-text="详细模式"
+        />
       </div>
-      <MetaDataConfig :data.sync="deployment.metadata" :tips="tips" />
-      <SpecConfig :data.sync="deployment.spec" :tips="tips" />
+      <MetaDataConfig :fastmod="fastmod" :data.sync="deployment.metadata" :tips="tips" />
+      <SpecConfig :fastmod="fastmod" :data.sync="deployment.spec" :tips="tips" />
     </el-card>
     <div>
       <DeployYaml :deployment="deployment" />
@@ -35,6 +41,7 @@ export default {
       deployment: { apiVersion: 'apps/v1', Kind: 'Deployment', metadata: {}, spec: {}},
       tips: false,
       isUpdate: false,
+      fastmod: false,
       ns: '',
       name: ''
     }
@@ -72,7 +79,7 @@ export default {
           }
         })
       } else {
-        createDeployment(clearEmptyObject(this.deployment)).then(rsp => {
+        createDeployment(clearEmptyObject(this.deployment), this.fastmod).then(rsp => {
           this.$router.push({
             path: `deployments`
           })

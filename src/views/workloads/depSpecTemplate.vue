@@ -5,8 +5,8 @@
         <span>POD模板 <Expand :expand.sync="expand" />  </span>
       </div>
       <div v-show="expand">
-        <MetaData labels="true" :data.sync="template.metadata" :tips="tips" />
-        <Container defaultname="init" title="Init容器" :data.sync="template.spec.initContainers" :tips="tips" />
+        <MetaData v-show="!fastmod" labels="true" :data.sync="template.metadata" :tips="tips" />
+        <Container v-show="!fastmod" defaultname="init" title="Init容器" :data.sync="template.spec.initContainers" :tips="tips" />
         <Container defaultname="container" title="业务容器" :data.sync="template.spec.containers" :tips="tips" />
       </div>
 
@@ -20,7 +20,7 @@ export default {
     MetaData: () => import('./depMetadata.vue'),
     Container: () => import('./depSpecTemplateContainer.vue')
   },
-  props: ['data', 'tips'],
+  props: ['data', 'tips', 'fastmod'],
   data() {
     return {
       template: { metadata: {}, spec: { containers: [] }},
