@@ -1,7 +1,8 @@
 export function isEmptyObject(obj) { // 判定对象是否为空  如 {}
   if (obj === null || obj === undefined) return true
-
-  return Object.keys(obj).length === 0
+  var objStr = JSON.stringify(obj)
+  return objStr === '{}'
+  // return Object.keys(obj).length===0   //这句话有问题
 }
 
 export function clearEmptyObject(obj) { // 清除 空对象属性 ,是一个递归

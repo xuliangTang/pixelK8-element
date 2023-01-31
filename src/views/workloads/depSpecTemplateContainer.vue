@@ -34,7 +34,7 @@
                     </el-form-item>
                     <el-form-item label="容器端口">
                       <el-input-number v-model="port.containerPort" />
-                      <span v-show="tips">一般填程序监听的端口</span>
+                      <span v-show="tips" class="is-gray li">一般填程序监听的端口</span>
                     </el-form-item>
                     <el-form-item>
                       <el-button type="danger" size="mini" icon="el-icon-minus" circle @click="rmPort(item, portindex)" />
