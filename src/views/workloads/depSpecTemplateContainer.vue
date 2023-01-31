@@ -47,6 +47,11 @@
                     <ArrayInput split=" " :data.sync="item.command" input_width="400px" />
                   </el-form>
                 </el-form-item>
+                <el-form-item label="参数(args)" style="width: 100%;margin-top: 20px">
+                  <el-form label="参数(args)">
+                    <ArrayInput split=" " :data.sync="item.args" input_width="400px" />
+                  </el-form>
+                </el-form-item>
               </el-form>
             </el-form-item>
           </el-form>
