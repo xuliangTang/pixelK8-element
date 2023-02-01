@@ -34,10 +34,26 @@ export function deleteDeployment(ns, name) {
   })
 }
 
-// 查看deployment
+// 获取原生deployment
 export function showDeployment(ns, name) {
   return request({
     url: '/v1/deployment/' + ns + '/' + name,
+    method: 'get'
+  })
+}
+
+// 查看deployment
+export function deploymentInfo(ns, name) {
+  return request({
+    url: '/v1/deployment/' + ns + '/' + name + '/info',
+    method: 'get'
+  })
+}
+
+// 获取deployment下的pods
+export function getDeploymentPods(ns, name) {
+  return request({
+    url: '/v1/deployment/' + ns + '/' + name + '/pods',
     method: 'get'
   })
 }

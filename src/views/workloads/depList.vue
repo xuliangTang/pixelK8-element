@@ -26,7 +26,7 @@
           </el-table-column>
           <el-table-column label="名称">
             <template slot-scope="scope">
-              <router-link :to='"deployment-create?mode=edit&ns=" + scope.row.namespace + "&name=" + scope.row.name'><el-link type="primary">{{ scope.row.name }}</el-link></router-link>
+              <router-link :to='"deployment-show?ns=" + scope.row.namespace + "&name=" + scope.row.name'><el-link type="primary">{{ scope.row.name }}</el-link></router-link>
             </template>
           </el-table-column>
           <el-table-column label="镜像">
@@ -61,6 +61,7 @@
                   更多<i class="el-icon-caret-bottom el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :command="['edit', scope.row]" class="clearfix">编辑</el-dropdown-item>
                   <el-dropdown-item :command="['drop', scope.row]" class="clearfix">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -169,6 +170,10 @@ export default {
           } else {
             this.$message.error(err.message)
           }
+        })
+      } else if (command[0] === 'edit') {
+        this.$router.push({
+          path: 'deployment-create?mode=edit&ns=' + command[1].namespace + '&name=' + command[1].name
         })
       }
     },

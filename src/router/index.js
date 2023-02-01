@@ -110,6 +110,13 @@ export const constantRoutes = [
         meta: { title: 'Deployments', icon: 'table' }
       },
       {
+        path: 'deployment-show',
+        name: 'Deployment-show',
+        component: () => import('@/views/workloads/depDetail'),
+        meta: { title: '查看Deployment' },
+        hidden: true
+      },
+      {
         path: 'deployment-create',
         name: 'Deployment-create',
         component: () => import('@/views/workloads/depCreate'),

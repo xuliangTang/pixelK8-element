@@ -28,7 +28,7 @@
           <el-table-column label="名称">
             <template slot-scope="scope">
               <p>{{ scope.row.name }}</p>
-              <p class="is-gray">{{ scope.row.ip[1] }}</p>
+              <p class="is-gray">{{ scope.row.ip[0] }}</p>
             </template>
           </el-table-column>
           <el-table-column label="镜像">
