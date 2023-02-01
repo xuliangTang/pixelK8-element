@@ -14,8 +14,14 @@
           inactive-text="详细模式"
         />
       </div>
-      <MetaDataConfig :fastmod="fastmod" :data.sync="deployment.metadata" :tips="tips" />
-      <SpecConfig :fastmod="fastmod" :data.sync="deployment.spec" :tips="tips" />
+      <el-form>
+        <el-form-item>
+          <MetaDataConfig :fastmod="fastmod" :data.sync="deployment.metadata" :tips="tips" />
+        </el-form-item>
+        <el-form-item>
+          <SpecConfig :fastmod="fastmod" :data.sync="deployment.spec" :tips="tips" />
+        </el-form-item>
+      </el-form>
     </el-card>
     <div>
       <DeployYaml :deployment="deployment" />

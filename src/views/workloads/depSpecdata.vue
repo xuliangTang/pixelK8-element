@@ -9,7 +9,7 @@
           <el-form>
             <el-form-item label="副本数">
               <el-input-number v-model="spec.replicas" :min="1" :max="20" label="副本数" />
-              <span v-show="tips" class="is-gray">deployment重要特性，来控制正常运行时pod的数量和期望保持一致</span>
+              <span v-show="tips" class="is-gray li">deployment重要特性，来控制正常运行时pod的数量和期望保持一致</span>
             </el-form-item>
             <MatchLabels v-show="!fastmod" :data.sync="spec.selector.matchLabels" :tips="tips" />
             <MatchExprs v-show="!fastmod" :data.sync="spec.selector.matchExpressions" :tips="tips" />

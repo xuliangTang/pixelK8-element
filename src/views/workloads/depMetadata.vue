@@ -1,13 +1,13 @@
 <template>
   <div>
+    <span v-show="tips" class="is-gray">
+      元数据，包含name、namespace、labels(标签)等设置
+    </span>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>metadata设置 <Expand :expand.sync="expand" /></span>
       </div>
       <div v-show="expand">
-        <span v-show="tips" class="is-gray">
-          元数据，包含name、namespace、labels(标签)等设置
-        </span>
         <el-form v-show="!this.labels" :inline="true">
           <el-form-item label="名称">
             <el-input v-model="metadata.name" placeholder="deployment名称" />
