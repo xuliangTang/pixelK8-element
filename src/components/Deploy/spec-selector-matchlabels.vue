@@ -46,6 +46,10 @@ export default {
   },
   created() {
     this.matchLabels = this.data
+    if (this.matchLabels === undefined || this.matchLabels === null) {
+      this.matchLabels = {}
+    }
+
     this.unParseSlice()
   },
   methods: {
