@@ -36,3 +36,17 @@ export function deleteTask(ns, name) {
     method: 'delete'
   })
 }
+
+export function getPipelineList(ns) {
+  return request({
+    url: '/v1/tekton/pipelines?ns=' + ns,
+    method: 'get'
+  })
+}
+
+export function deletePipeline(ns,name) {
+  return request({
+    url: '/v1/tekton/pipeline/' + ns + '/' + name,
+    method: 'delete'
+  })
+}

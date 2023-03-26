@@ -244,7 +244,12 @@ export const constantRoutes = [
         component: () => import('@/views/tekton/task-create'),
         meta: { title: '创建/编辑任务', icon: 'table' }
       },
-
+      {
+        path: 'pipelinelist',
+        name: 'Pipelinelist',
+        component: () => import('@/views/tekton/pipeline-list'),
+        meta: { title: '流水线列表', icon: 'table' }
+      },
     ]
   },
 
