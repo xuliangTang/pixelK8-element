@@ -57,6 +57,10 @@
                   <Liveness :data.sync="item.livenessProbe" :tips="tips" title="存活检查" />
                   <Liveness :data.sync="item.readinessProbe" :tips="tips" title="就绪检查" />
                 </el-form-item>
+
+                <el-form-item v-show="tektontask" label="其他配置">
+                  <CombineTask :data.sync="item.tektontask"/>
+                </el-form-item>
               </el-form>
             </el-form-item>
           </el-form>
@@ -72,9 +76,10 @@ export default {
   components: {
     ArrayInput,
     Expand: () => import('./cardExpand.vue'),
-    Liveness: () => import('@/components/Deploy/container-liveness')
+    Liveness: () => import('@/components/Deploy/container-liveness'),
+    CombineTask: () => import('@/views/tekton/task-ext.vue')
   },
-  props: ['data', 'tips', 'title', 'defaultname', 'fastmod'],
+  props: ['data', 'tips', 'title', 'defaultname', 'fastmod', 'tektontask'],
   data() {
     return {
       containers: [], // { name: '', image: '', ports: [] }

@@ -37,6 +37,7 @@
         </template>
       </el-table-column>
 
+      <!--//程序员在囧途(www.jtthink.com)咨询群：98514334-->
       <el-table-column label="创建时间" width="170" align="center">
         <template slot-scope="scope">
           {{ scope.row.metadata.creationTimestamp }}
@@ -45,7 +46,7 @@
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
 
-          <i class="el-icon-delete " style="cursor:pointer;font-size: 18px;margin-left: 10px" @click="()=>rmTask(scope.row.NameSpace,scope.row.Name )" />
+          <i class="el-icon-delete " style="cursor:pointer;font-size: 18px;margin-left: 10px" @click="()=>rmTask(scope.row.metadata.namespace,scope.row.metadata.name )" />
 
         </template>
       </el-table-column>
@@ -54,7 +55,7 @@
 </template>
 
 <script>
-import { getTaskList } from '@/api/tekton'
+import { getTaskList, deleteTask } from '@/api/tekton'
 import { NewClient } from '@/utils/ws'
 import { getNsList } from '@/api/namespace'
 export default {
@@ -81,7 +82,7 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-
+        deleteTask(ns, name)
       })
     },
     changeNs(ns) {
