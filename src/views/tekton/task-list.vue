@@ -27,6 +27,7 @@
 
       <el-table-column label="名称" width="350">
         <template slot-scope="scope">
+
           {{ scope.row.metadata.name }}
 
         </template>
@@ -45,7 +46,7 @@
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
-
+          <router-link :to="{name:'Createtask',params:{ns:scope.row.metadata.namespace,name:scope.row.metadata.name}}"><i class="el-icon-edit" style="font-size: 18px" /></router-link>
           <i class="el-icon-delete " style="cursor:pointer;font-size: 18px;margin-left: 10px" @click="()=>rmTask(scope.row.metadata.namespace,scope.row.metadata.name )" />
 
         </template>
@@ -96,7 +97,6 @@ export default {
       // 通过rest api 获取
       getTaskList(this.namespace).then(response => {
         this.list = response.data.data
-        console.log(this.list)
         this.listLoading = false
       })
       this.wsClient = NewClient()

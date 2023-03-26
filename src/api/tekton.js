@@ -7,10 +7,25 @@ export function getTaskList(ns) {
   })
 }
 
+export function getTask(ns,name) {
+  return request({
+    url: '/v1/tekton/task/' + ns + '/' + name,
+    method: 'get'
+  })
+}
+
 export function saveTask(data) {
   return request({
     url: '/v1/tekton/task',
     method: 'post',
+    data
+  })
+}
+
+export function updateTask(data) {
+  return request({
+    url: '/v1/tekton/task',
+    method: 'put',
     data
   })
 }

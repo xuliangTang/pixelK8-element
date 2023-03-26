@@ -1,3 +1,4 @@
+
 export function objIsEqual(obj1, obj2) {
   var o1 = obj1 instanceof Object
   var o2 = obj2 instanceof Object
@@ -23,21 +24,20 @@ export function objIsEqual(obj1, obj2) {
   }
   return true
 }
-
 export function trim(x) {
+  if (x === undefined || x === null) return x
   return x.replace(/^\s+|\s+$/gm, '')
 }
-
 export function isEmptyObject(obj) { // 判定对象是否为空  如 {}
   if (obj === null || obj === undefined) return true
   var objStr = JSON.stringify(obj)
-  return objStr === '{}'
+  return objStr === '{}' || objStr === '[]' // 空数组也要干掉
   // return Object.keys(obj).length===0   //这句话有问题
 }
-
 export function clearEmptyObject(obj) { // 清除 空对象属性 ,是一个递归
   for (var key in obj) {
-    if (obj[key] === undefined || obj[key] === null) {
+    if (isEmptyObject(obj[key])) {
+      isEdited = true
       delete obj[key]
       continue
     }
@@ -48,6 +48,7 @@ export function clearEmptyObject(obj) { // 清除 空对象属性 ,是一个递�
         }
       } else {
         if (isEmptyObject(obj[key])) {
+          isEdited = true
           delete obj[key]
         } else {
           clearEmptyObject(obj[key])
@@ -57,7 +58,6 @@ export function clearEmptyObject(obj) { // 清除 空对象属性 ,是一个递�
   }
   return obj
 }
-
 export function initIfNil(obj, destKey, v) { //  支持多级
   if (v === undefined) { v = {} }
   var destObject = 'obj' // 凑字符串
@@ -74,7 +74,6 @@ export function initIfNil(obj, destKey, v) { //  支持多级
 
 // 快捷插入
 export function fastPathDeploy(obj) {
-  console.log(obj.metadata.name)
   if (obj.metadata === undefined || obj.metadata.name === undefined || obj.metadata.name === '') {
     alert('请先填写name')
   }
@@ -89,8 +88,45 @@ export function fastPathDeploy(obj) {
 
   return obj
 }
-
 export function copyObject(obj) {
   var str = JSON.stringify(obj)
   return JSON.parse(str)
+}
+
+export function clearEmptyObject_2(obj) { // 剔除对象的空属性
+  var _newObj = {}
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) { // 判断对象中是否有这个属性
+      if (isEmptyObject(obj[key])) continue
+      _newObj[key] = typeof obj[key] === 'object' ? (
+        obj[key] instanceof Array ? clearEmptyArray(obj[key]) : clearEmptyObject_2(obj[key])
+      ) : obj[key]
+    }
+  }
+  return _newObj
+}
+function clearEmptyArray(arr) { // 剔除数组中的空值
+  var err = []
+
+  arr.forEach((item, index) => {
+    if (isEmptyObject(item)) return
+    err.push(
+      typeof item === 'object' ? (
+        item instanceof Array ? clearEmptyArray(item) : clearEmptyObject_2(item)
+      ) : item
+    )
+  })
+  return err
+}
+
+// 循环清理
+let isEdited = false
+export function clearAll(obj) {
+  isEdited = false
+  obj = clearEmptyObject(obj)
+  while (isEdited) {
+    isEdited = false
+    obj = clearEmptyObject(obj)
+  }
+  return obj
 }

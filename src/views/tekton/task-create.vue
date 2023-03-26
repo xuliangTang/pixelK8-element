@@ -5,10 +5,10 @@
         <span>基本配置</span>
         <el-form :inline="true">
           <el-form-item label="任务名称">
-            <el-input v-model="metadata.name" />
+            <el-input v-model="metadata.name" :disabled="isEdit" />
           </el-form-item>
           <el-form-item label="命名空间">
-            <el-select v-model="metadata.namespace">
+            <el-select v-model="metadata.namespace" :disabled="isEdit">
               <el-option
                 v-for="ns in nslist "
                 :label="ns.name"
@@ -42,8 +42,9 @@
 <script>
 import DeployYaml from '@/views/workloads/depYaml.vue'
 import { getNsList } from '@/api/namespace'
-import { saveTask, deleteTask } from '@/api/tekton'
+import { saveTask, deleteTask, getTask, updateTask } from '@/api/tekton'
 import { clearEmptyObject, clearAll } from '@/utils/helper'
+const stepExtProps = ['script', 'timeout', 'workspaces']
 export default {
   components: {
     DeployYaml,
@@ -53,26 +54,60 @@ export default {
     return {
       metadata: { name: '', namespace: 'default' },
       nslist: [],
-      spec: { steps: [] }
+      spec: { steps: [] },
+      isEdit: false
     }
   },
   created() {
     getNsList().then(rsp => {
       this.nslist = rsp.data.data
+
+      if (this.$route.params.ns !== undefined && this.$route.params.name !== undefined) {
+        const ns = this.$route.params.ns
+        const name = this.$route.params.name
+        getTask(ns, name).then(rsp => {
+          this.isEdit = true
+          this.metadata = rsp.data.data.metadata
+          this.spec = rsp.data.data.spec
+          this.unparseStep() // 合并属性
+        })
+      }
     })
   },
   methods: {
-    saveTask() {
+    unparseStep() {
+      // 主要是 script，timeout，workspaces 三个属性。  如果有 要 合并到tektontask属性中
+      for (var j = 0; j < this.spec.steps.length; j++) {
+        for (var i = 0; i < stepExtProps.length; i++) {
+          if (this.spec.steps[j][stepExtProps[i]]) {
+            if (this.spec.steps[j].tektontask === undefined) {
+              this.spec.steps[j].tektontask = {}
+            }
+            this.spec.steps[j].tektontask[stepExtProps[i]] = this.spec.steps[j][stepExtProps[i]]
+            delete this.spec.steps[j][stepExtProps[i]]
+          }
+        }
+      }
+    },
+    parseSteps() {
       this.spec.steps.forEach(step => {
+        // 主要是 script，timeout，workspaces 三个属性。
         if (step['tektontask'] !== undefined) { // 这里要处理  额外的 属性
           for (var taskKey in step['tektontask']) {
             step[taskKey] = step['tektontask'][taskKey]
           }
           delete step['tektontask']
+          if (step.script !== undefined && step.script !== '') {
+            delete step.command
+          }
         }
       })
-
-      saveTask({ metadata: this.metadata, spec: this.spec }).then(rsp => {
+    },
+    saveTask() {
+      this.parseSteps()
+      const cleardObject = clearAll(this.spec)
+      const operatorFunc = this.isEdit ? updateTask : saveTask
+      operatorFunc({ metadata: this.metadata, spec: this.spec }).then(rsp => {
         alert('成功')
         this.$router.push({ name: 'Tasklist' })
       })
