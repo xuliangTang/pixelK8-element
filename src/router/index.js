@@ -226,6 +226,29 @@ export const constantRoutes = [
   },
 
   {
+    path: '/tektons',
+    component: Layout,
+    redirect: '/tektons/tasklist',
+    name: 'tektons',
+    meta: { title: 'Tekton管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'tasklist',
+        name: 'Tasklist',
+        component: () => import('@/views/tekton/task-list'),
+        meta: { title: '任务列表', icon: 'table' }
+      },
+      {
+        path: 'createtask',
+        name: 'Createtask',
+        component: () => import('@/views/tekton/task-create'),
+        meta: { title: '创建/编辑任务', icon: 'table' }
+      },
+
+    ]
+  },
+
+  {
     path: '/rbac',
     component: Layout,
     redirect: '/rbac/roles',
