@@ -250,6 +250,12 @@ export const constantRoutes = [
         component: () => import('@/views/tekton/pipeline-list'),
         meta: { title: '流水线列表', icon: 'table' }
       },
+      {
+        path: 'createpipeline',
+        name: 'Createpipeline',
+        component: () => import('@/views/tekton/pipeline-create'),
+        meta: { title: '创建/编辑流水线', icon: 'table' }
+      },
     ]
   },
 

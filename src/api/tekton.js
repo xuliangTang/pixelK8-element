@@ -44,6 +44,29 @@ export function getPipelineList(ns) {
   })
 }
 
+export function updatePipeline(data) {
+  return request({
+    url: '/v1/tekton/pipeline',
+    method: 'put',
+    data
+  })
+}
+
+export function savePipeline(data) {
+  return request({
+    url: '/v1/tekton/pipeline',
+    method: 'post',
+    data
+  })
+}
+
+export function getPipeline(ns, name) {
+  return request({
+    url: '/v1/tekton/pipeline/' + ns + '/' + name,
+    method: 'get'
+  })
+}
+
 export function deletePipeline(ns,name) {
   return request({
     url: '/v1/tekton/pipeline/' + ns + '/' + name,

@@ -46,7 +46,7 @@
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
-          <router-link :to="{name:'Createtask',params:{ns:scope.row.metadata.namespace,name:scope.row.metadata.name}}"><i class="el-icon-edit" style="font-size: 18px" /></router-link>
+          <router-link :to="{name:'Createpipeline',params:{ns:scope.row.metadata.namespace,name:scope.row.metadata.name}}"><i class="el-icon-edit" style="font-size: 18px" /></router-link>
           <i class="el-icon-delete " style="cursor:pointer;font-size: 18px;margin-left: 10px" @click="()=>rmPipeline(scope.row.metadata.namespace,scope.row.metadata.name )" />
 
         </template>
