@@ -256,6 +256,18 @@ export const constantRoutes = [
         component: () => import('@/views/tekton/pipeline-create'),
         meta: { title: '创建/编辑流水线', icon: 'table' }
       },
+      {
+        path: 'pipelinerunlist',
+        name: 'Pipelinerunlist',
+        component: () => import('@/views/tekton/pipelinerun-list'),
+        meta: { title: '流水线运行时列表', icon: 'table' }
+      },
+      {
+        path: 'createpipelinerun',
+        name: 'Createpipelinerun',
+        component: () => import('@/views/tekton/pipelinerun-create'),
+        meta: { title: '创建/编辑流水线运行时', icon: 'table' }
+      },
     ]
   },
 

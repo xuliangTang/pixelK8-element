@@ -73,3 +73,40 @@ export function deletePipeline(ns,name) {
     method: 'delete'
   })
 }
+
+export function getPipelineRunList(ns) {
+  return request({
+    url: '/v1/tekton/pipelineruns?ns=' + ns,
+    method: 'get'
+  })
+}
+
+export function getPipelineRun(ns, name) {
+  return request({
+    url: '/v1/tekton/pipelinerun/' + ns + '/' + name,
+    method: 'get'
+  })
+}
+
+export function deletePipelineRun(ns, name) {
+  return request({
+    url: '/v1/tekton/pipelinerun/' + ns + '/' + name,
+    method: 'delete'
+  })
+}
+
+export function updatePipelineRun(data) {
+  return request({
+    url: '/v1/tekton/pipelinerun',
+    method: 'put',
+    data
+  })
+}
+
+export function savePipelineRun(data) {
+  return request({
+    url: '/v1/tekton/pipelinerun',
+    method: 'post',
+    data
+  })
+}
