@@ -38,7 +38,7 @@
     </div>
   </div>
 </template>
-<!--//程序员在囧途(www.jtthink.com)咨询群：98514334-->
+
 <script>
 import DeployYaml from '@/views/workloads/depYaml.vue'
 import { getNsList } from '@/api/namespace'

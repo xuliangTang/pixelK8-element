@@ -38,10 +38,9 @@
         </template>
       </el-table-column>
 
-      <!--//程序员在囧途(www.jtthink.com)咨询群：98514334-->
       <el-table-column label="创建时间" width="170" align="center">
         <template slot-scope="scope">
-          {{ scope.row.metadata.creationTimestamp }}
+          {{ formatDate(scope.row.metadata.creationTimestamp,'YYYY-MM-DD HH:mm:ss') }}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
@@ -56,6 +55,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/utils/helper'
 import { getPipelineList, deletePipeline } from '@/api/tekton'
 import { NewClient } from '@/utils/ws'
 import { getNsList } from '@/api/namespace'
@@ -66,7 +66,8 @@ export default {
       list: null,
       listLoading: true,
       wsClient: null,
-      nslist: []
+      nslist: [],
+      formatDate
     }
   },
   created() {

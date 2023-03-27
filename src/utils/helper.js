@@ -1,4 +1,10 @@
-
+import moment from 'moment'
+export function formatDate(date, format) {
+  if (date) {
+    return moment(date).format(format)
+  }
+  return ''
+}
 export function objIsEqual(obj1, obj2) {
   var o1 = obj1 instanceof Object
   var o2 = obj2 instanceof Object

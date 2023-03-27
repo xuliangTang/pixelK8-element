@@ -36,10 +36,21 @@
         </template>
       </el-table-column>
 
-      <!--//程序员在囧途(www.jtthink.com)咨询群：98514334-->
       <el-table-column label="创建时间" width="170" align="center">
         <template slot-scope="scope">
-          {{ scope.row.metadata.creationTimestamp }}
+          {{ formatDate(scope.row.metadata.creationTimestamp,'YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
+      <el-table-column label="运行时间" width="170" align="center">
+        <template slot-scope="scope">
+          {{ formatDate(scope.row.status.startTime,'YYYY-MM-DD HH:mm:ss') }}
+          -  {{ formatDate(scope.row.status.completionTime,'HH:mm:ss') }}
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="170" align="center">
+        <template slot-scope="scope">
+          <!-- {{  scope.row.status.conditions[0].type }}-->
+          <span v-html="getStatus(scope.row.status.conditions)"></span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
@@ -54,6 +65,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/utils/helper'
 import { getPipelineRunList, deletePipelineRun } from '@/api/tekton'
 import { NewClient } from '@/utils/ws'
 import { getNsList } from '@/api/namespace'
@@ -64,7 +76,8 @@ export default {
       list: null,
       listLoading: true,
       wsClient: null,
-      nslist: []
+      nslist: [],
+      formatDate
     }
   },
   created() {
@@ -74,6 +87,15 @@ export default {
     })
   },
   methods: {
+    getStatus(conditions) {
+      if (conditions.length === 0) {
+        return ' - '
+      }
+      if (conditions[0].status === 'False') {
+        return '<span class="red">' + conditions[0].message + '</span>>'
+      }
+      return '<span class="green">Successed</span>'
+    },
     rmPipelineRun(ns, name) {
       this.$confirm('是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -96,6 +118,7 @@ export default {
       getPipelineRunList(this.namespace).then(response => {
         this.list = response.data.data
         this.listLoading = false
+        console.log(this.list)
       })
       this.wsClient = NewClient()
       this.wsClient.onmessage = (e) => {
