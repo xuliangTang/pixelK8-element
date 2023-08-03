@@ -28,12 +28,14 @@
           <el-checkbox v-model="annoComponents.cors">跨域</el-checkbox>
           <el-checkbox v-model="annoComponents.rewrite">重写</el-checkbox>
           <el-checkbox v-model="annoComponents.auth">身份认证</el-checkbox>
+          <el-checkbox v-model="annoComponents.rateLimit">限流</el-checkbox>
           <el-checkbox v-model="annoComponents.other">自定义</el-checkbox>
         </span>
       </div>
       <Cors v-show="annoComponents.cors" ref="cors" />
       <Rewrite v-show="annoComponents.rewrite" ref="rewrite" />
       <BasicAuth v-show="annoComponents.auth" ref="basicAuth" />
+      <RateLimit v-show="annoComponents.rateLimit" ref="rateLimit" />
       <div v-show="annoComponents.other">
         <el-input
           v-model="annotations"
@@ -115,9 +117,10 @@ import { getServiceAll } from '@/api/service'
 import Cors from './ingressCors'
 import Rewrite from './ingressRewrite'
 import BasicAuth from './ingress-auth'
+import RateLimit from './ingress-ratelimit'
 export default {
   components: {
-    Cors, Rewrite, BasicAuth
+    Cors, Rewrite, BasicAuth, RateLimit
   },
   data() {
     return {
@@ -130,7 +133,7 @@ export default {
       svcList: [],
       annotations: '',
       annoComponents: {
-        cors: false, rewrite: false, auth: false, other: false
+        cors: false, rewrite: false, auth: false, other: false, rateLimit: false
       }
     }
   },
