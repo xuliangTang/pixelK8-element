@@ -24,3 +24,11 @@ export function deleteIngress(ns, name) {
     method: 'delete'
   })
 }
+
+// 获取ingress的yaml
+export function getIngressForYaml(ns, name) {
+  return request({
+    url: '/v1/ingress/' + ns + '/' + name,
+    method: 'get'
+  })
+}

@@ -59,6 +59,7 @@
                   更多<i class="el-icon-caret-bottom el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item><router-link :to='"ingress-yaml?ns=" + item.name + "&name=" + scope.row.name'>查看YAML</router-link></el-dropdown-item>
                   <el-dropdown-item :command="['drop', scope.row]" class="clearfix">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>

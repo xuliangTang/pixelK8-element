@@ -171,6 +171,13 @@ export const constantRoutes = [
         component: () => import('@/views/service-discovery/ingressCreate'),
         meta: { title: '编辑ingress' },
         hidden: true
+      },
+      {
+        path: 'ingress-yaml',
+        name: 'ingress-yaml',
+        component: () => import('@/views/service-discovery/ingress-yaml'),
+        meta: { title: '查看ingress YAML' },
+        hidden: true
       }
     ]
   },
