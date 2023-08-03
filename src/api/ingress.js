@@ -32,3 +32,12 @@ export function getIngressForYaml(ns, name) {
     method: 'get'
   })
 }
+
+// 生成auth密文
+export function genAuthFile(data) {
+  return request({
+    url: '/v1/ingress/auth/secret',
+    method: 'post',
+    data
+  })
+}

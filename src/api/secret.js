@@ -1,9 +1,9 @@
 import request from '@/utils/myRequest'
 
 // 获取secret列表
-export function getSecretList(ns, page) {
+export function getSecretList(ns, page, per_page = 5) {
   return request({
-    url: '/v1/secrets?ns=' + ns + '&per_page=5&page=' + page,
+    url: '/v1/secrets?ns=' + ns + '&per_page=' + per_page + '&page=' + page,
     method: 'get'
   })
 }

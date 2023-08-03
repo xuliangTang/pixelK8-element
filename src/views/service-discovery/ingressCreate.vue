@@ -9,7 +9,7 @@
           <el-input v-model="name" placeholder="ingress名称" />
         </el-form-item>
         <el-form-item label="命名空间">
-          <el-select @change="changeNs" v-model="namespace">
+          <el-select v-model="namespace" @change="changeNs">
             <el-option
               v-for="ns in nsList"
               :label="ns.name"
@@ -24,32 +24,52 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>标签设置</span>
+        <span style="margin-left: 30px">
+          <el-checkbox v-model="annoComponents.cors">跨域</el-checkbox>
+          <el-checkbox v-model="annoComponents.rewrite">重写</el-checkbox>
+          <el-checkbox v-model="annoComponents.auth">身份认证</el-checkbox>
+          <el-checkbox v-model="annoComponents.other">自定义</el-checkbox>
+        </span>
       </div>
-      <el-collapse>
+      <Cors v-show="annoComponents.cors" ref="cors" />
+      <Rewrite v-show="annoComponents.rewrite" ref="rewrite" />
+      <BasicAuth v-show="annoComponents.auth" ref="basicAuth" />
+      <div v-show="annoComponents.other">
+        <el-input
+          v-model="annotations"
+          type="textarea"
+          :autosize="{ minRows: 3, maxRows: 6}"
+          placeholder="格式: key:value;"
+        />
+      </div>
+      <!--<el-collapse>
         <el-collapse-item title="跨域配置" name="1">
-          <Cors ref="cors"></Cors>
+          <Cors ref="cors" />
         </el-collapse-item>
         <el-collapse-item title="重写配置" name="2">
-          <Rewrite ref="rewrite"></Rewrite>
+          <Rewrite ref="rewrite" />
         </el-collapse-item>
-        <el-collapse-item title="自定义" name="3">
+        <el-collapse-item title="身份认证" name="3">
+          <BasicAuth ref="basicAuth" />
+        </el-collapse-item>
+        <el-collapse-item title="自定义" name="4">
           <div>
             <el-input
+              v-model="annotations"
               type="textarea"
               :autosize="{ minRows: 3, maxRows: 6}"
               placeholder="格式: key:value;"
-              v-model="annotations">
-            </el-input>
+            />
           </div>
         </el-collapse-item>
-      </el-collapse>
+      </el-collapse>-->
     </el-card>
 
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>规则</span>
       </div>
-      <el-form v-model="rules" v-for="(rule,ruleindex) in rules">
+      <el-form v-for="(rule,ruleindex) in rules" v-model="rules">
         <el-form :inline="true">
           <el-form-item label="域名">
             <el-input v-model="rule.host" placeholder="填写域名" />
@@ -94,7 +114,11 @@ import { getNsList } from '@/api/namespace'
 import { getServiceAll } from '@/api/service'
 import Cors from './ingressCors'
 import Rewrite from './ingressRewrite'
+import BasicAuth from './ingress-auth'
 export default {
+  components: {
+    Cors, Rewrite, BasicAuth
+  },
   data() {
     return {
       name: '',
@@ -104,7 +128,10 @@ export default {
       ],
       nsList: [],
       svcList: [],
-      annotations: ''
+      annotations: '',
+      annoComponents: {
+        cors: false, rewrite: false, auth: false, other: false
+      }
     }
   },
   created() {
@@ -140,7 +167,7 @@ export default {
       this.rules.forEach((rule, ruleindex) => {
         if (ruleindex === ruleIndex) {
           rule.paths.forEach((path, pathindex) => {
-            if (pathindex === pathIndex){
+            if (pathindex === pathIndex) {
               rule.paths.splice(pathindex, 1)
             }
           })
@@ -171,9 +198,6 @@ export default {
           }
         })
     }
-  },
-  components: {
-    Cors, Rewrite
   }
 
 }

@@ -45,6 +45,12 @@
                   disable-transitions
                 >路径重写</el-tag>
               </span>
+              <span v-if="scope.row.opt.auth_enable">
+                <el-tag
+                  type="success"
+                  disable-transitions
+                >身份认证</el-tag>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="创建时间">
