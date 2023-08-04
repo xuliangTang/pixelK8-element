@@ -30,6 +30,7 @@
           <el-checkbox v-model="annoComponents.auth">身份认证</el-checkbox>
           <el-checkbox v-model="annoComponents.rateLimit">限流</el-checkbox>
           <el-checkbox v-model="annoComponents.serverSnippet">server-snippet</el-checkbox>
+          <el-checkbox v-model="annoComponents.configurationSnippet">configuration-snippet</el-checkbox>
           <el-checkbox v-model="annoComponents.other">自定义</el-checkbox>
         </span>
       </div>
@@ -37,7 +38,8 @@
       <Rewrite v-show="annoComponents.rewrite" ref="rewrite" />
       <BasicAuth v-show="annoComponents.auth" ref="basicAuth" />
       <RateLimit v-show="annoComponents.rateLimit" ref="rateLimit" />
-      <ServerSnippet v-show="annoComponents.serverSnippet" ref="snippet" />
+      <ServerSnippet v-show="annoComponents.serverSnippet" ref="serverSnippet" />
+      <ConfigurationSnippet v-show="annoComponents.configurationSnippet" ref="configurationSnippet" />
       <div v-show="annoComponents.other">
         <el-input
           v-model="annotations"
@@ -121,9 +123,10 @@ import Rewrite from './ingressRewrite'
 import BasicAuth from './ingress-auth'
 import RateLimit from './ingress-ratelimit'
 import ServerSnippet from './ingress-snippet-server.vue'
+import ConfigurationSnippet from './ingress-snippet-configuration'
 export default {
   components: {
-    Cors, Rewrite, BasicAuth, RateLimit, ServerSnippet
+    Cors, Rewrite, BasicAuth, RateLimit, ServerSnippet, ConfigurationSnippet
   },
   data() {
     return {
@@ -136,7 +139,7 @@ export default {
       svcList: [],
       annotations: '',
       annoComponents: {
-        cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false
+        cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false, configurationSnippet: false
       }
     }
   },
