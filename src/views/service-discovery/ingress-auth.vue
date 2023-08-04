@@ -1,57 +1,63 @@
 <template>
   <div>
-    <el-form :model="authConfig" label-width="80px">
-      <el-form-item label="启用">
-        <el-switch v-model="authConfig.auth_enable" />
-      </el-form-item>
-      <el-form-item label="选择类型">
-        <el-select v-model="authConfig.auth_type">
-          <el-option label="basic认证" value="basic" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="密文类型">
-        <el-select v-model="authConfig.auth_secret_type">
-          <el-option label="auth-file" value="auth-file" />
-          <el-option label="auth-map" value="auth-map" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="选择密文">
-        <el-select v-model="authConfig.auth_secret">
-          <el-option
-            v-for="secret in secretList"
-            :label="secret.name"
-            :value="secret.name"
-          />
-        </el-select>
-        <span><el-link type="primary" @click="showFastAuth=!showFastAuth">快捷创建</el-link></span>
-      </el-form-item>
-    </el-form>
-    <el-card v-show="showFastAuth" class="box-card">
+    <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>快捷生成用户名和密码</span>
+        <span>身份认证</span>
       </div>
-      <el-form :inline="true" :model="genAuth" label-width="80px">
-        <el-form-item label="密文名称">
-          <el-input v-model="genAuth.secret_name" style="width: 100px" />
-        </el-form-item>
-        <el-form-item label="用户名">
-          <el-input v-model="genAuth.user_name" style="width: 100px" />
-        </el-form-item>
-        <el-form-item label="用户密码">
-          <el-input v-model="genAuth.user_pass" style="width: 100px" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="fastGenAuth">保存</el-button>
-        </el-form-item>
-      </el-form>
-
+      <div>
+        <el-form :model="authConfig" label-width="150px">
+          <el-form-item label="启用">
+            <el-switch v-model="authConfig.auth_enable" />
+          </el-form-item>
+          <el-form-item label="选择类型">
+            <el-select v-model="authConfig.auth_type">
+              <el-option label="basic认证" value="basic" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="密文类型">
+            <el-select v-model="authConfig.auth_secret_type">
+              <el-option label="auth-file" value="auth-file" />
+              <el-option label="auth-map" value="auth-map" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="选择密文">
+            <el-select v-model="authConfig.auth_secret">
+              <el-option
+                v-for="secret in secretList"
+                :label="secret.name"
+                :value="secret.name"
+              />
+            </el-select>
+            <span style="margin-left: 30px"><el-link type="primary" @click="showFastAuth=!showFastAuth">快捷创建</el-link></span>
+          </el-form-item>
+        </el-form>
+        <el-card v-show="showFastAuth" class="box-card">
+          <div slot="header" class="clearfix">
+            <span>快捷生成用户名和密码</span>
+          </div>
+          <el-form :inline="true" :model="genAuth" label-width="80px">
+            <el-form-item label="密文名称">
+              <el-input v-model="genAuth.secret_name" style="width: 100px" />
+            </el-form-item>
+            <el-form-item label="用户名">
+              <el-input v-model="genAuth.user_name" style="width: 100px" />
+            </el-form-item>
+            <el-form-item label="用户密码">
+              <el-input v-model="genAuth.user_pass" style="width: 100px" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="fastGenAuth">保存</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
     </el-card>
   </div>
 </template>
 <script>
 import { getSecretList } from '@/api/secret'
 import { genAuthFile } from '@/api/ingress'
-
+const prefix = 'nginx.ingress.kubernetes.io'
 export default {
   props: {
     ns: {
@@ -118,20 +124,39 @@ export default {
       })
     },
     output() {
-      const prefix = 'nginx.ingress.kubernetes.io'
-      let result = ''
-
+      const result = {}
       if (this.authConfig.auth_enable) {
         for (const key in this.authConfig) {
           const newKey = key.replace(/_/g, '-')
           if (this.authConfig[key] !== '') {
-            result += prefix + '/' + newKey + ':' + this.authConfig[key] + ';'
+            result[prefix + '/' + newKey] = this.authConfig[key].toString()
           }
         }
-        return result
       }
 
-      return ''
+      return result
+    },
+    setAnnotations(data) {
+      this.parseData(data)
+    },
+    // 编辑状态下进行annotations的解析
+    parseData(data) {
+      if (data !== undefined && data !== null) {
+        for (const key in data) {
+          this.setIfExists(key, data[key])
+        }
+      }
+    },
+    // parseData函数的辅助函数，判断传递过来的annotation中的属性在自身的对象中是否存在
+    setIfExists(key, value) {
+      value = value === 'true' ? true : value
+      for (const mykey in this.authConfig) {
+        if (key.replace(/-/g, '_') === prefix + '/' + mykey) {
+          this.$set(this.authConfig, mykey, value)
+          this.$emit('pop', key)
+          this.$emit('update:show', true)
+        }
+      }
     }
   }
 }

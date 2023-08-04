@@ -6,10 +6,10 @@
       </div>
       <el-form :inline="true">
         <el-form-item label="名称">
-          <el-input v-model="name" placeholder="ingress名称" />
+          <el-input v-model="name" placeholder="ingress名称" :disabled="isEdit" />
         </el-form-item>
         <el-form-item label="命名空间">
-          <el-select v-model="namespace" @change="changeNs">
+          <el-select v-model="namespace" @change="changeNs" :disabled="isEdit" >
             <el-option
               v-for="ns in nsList"
               :label="ns.name"
@@ -17,13 +17,12 @@
             />
           </el-select>
         </el-form-item>
-
       </el-form>
     </el-card>
 
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>标签设置</span>
+        <span>注解设置</span>
         <span style="margin-left: 30px">
           <el-checkbox v-model="annoComponents.cors">跨域</el-checkbox>
           <el-checkbox v-model="annoComponents.rewrite">重写</el-checkbox>
@@ -31,44 +30,40 @@
           <el-checkbox v-model="annoComponents.rateLimit">限流</el-checkbox>
           <el-checkbox v-model="annoComponents.serverSnippet">server-snippet</el-checkbox>
           <el-checkbox v-model="annoComponents.configurationSnippet">configuration-snippet</el-checkbox>
-          <el-checkbox v-model="annoComponents.other">自定义</el-checkbox>
+          <el-checkbox v-model="annoComponents.other">其他</el-checkbox>
         </span>
       </div>
-      <Cors v-show="annoComponents.cors" ref="cors" />
-      <Rewrite v-show="annoComponents.rewrite" ref="rewrite" />
-      <BasicAuth v-show="annoComponents.auth" ref="basicAuth" />
-      <RateLimit v-show="annoComponents.rateLimit" ref="rateLimit" />
-      <ServerSnippet v-show="annoComponents.serverSnippet" ref="serverSnippet" />
-      <ConfigurationSnippet v-show="annoComponents.configurationSnippet" ref="configurationSnippet" />
-      <div v-show="annoComponents.other">
+      <Cors v-show="annoComponents.cors" ref="cors" :show.sync="annoComponents.cors" @pop="popAnnotation" />
+      <Rewrite v-show="annoComponents.rewrite" ref="rewrite" :show.sync="annoComponents.rewrite" @pop="popAnnotation" />
+      <BasicAuth v-show="annoComponents.auth" ref="basicAuth" :show.sync="annoComponents.auth" @pop="popAnnotation" />
+      <RateLimit v-show="annoComponents.rateLimit" ref="rateLimit" :show.sync="annoComponents.rateLimit" @pop="popAnnotation" />
+      <ServerSnippet v-show="annoComponents.serverSnippet" ref="serverSnippet" :show.sync="annoComponents.serverSnippet" @pop="popAnnotation" />
+      <ConfigurationSnippet v-show="annoComponents.configurationSnippet" ref="configurationSnippet" :show.sync="annoComponents.configurationSnippet" @pop="popAnnotation" />
+      <!--<div v-show="annoComponents.other">
         <el-input
           v-model="annotations"
           type="textarea"
           :autosize="{ minRows: 3, maxRows: 6}"
           placeholder="格式: key:value;"
         />
-      </div>
-      <!--<el-collapse>
-        <el-collapse-item title="跨域配置" name="1">
-          <Cors ref="cors" />
-        </el-collapse-item>
-        <el-collapse-item title="重写配置" name="2">
-          <Rewrite ref="rewrite" />
-        </el-collapse-item>
-        <el-collapse-item title="身份认证" name="3">
-          <BasicAuth ref="basicAuth" />
-        </el-collapse-item>
-        <el-collapse-item title="自定义" name="4">
-          <div>
-            <el-input
-              v-model="annotations"
-              type="textarea"
-              :autosize="{ minRows: 3, maxRows: 6}"
-              placeholder="格式: key:value;"
-            />
-          </div>
-        </el-collapse-item>
-      </el-collapse>-->
+      </div>-->
+      <el-card class="box-card" v-show="annoComponents.other">
+        <div slot="header" class="clearfix">
+          <span>其他配置</span>
+        </div>
+        <div>
+          <el-form v-for="(item,itemindex) in orgin_annotations_list" :inline="true" label-width="80px">
+            <el-form-item label="key">
+              <el-input v-model="item.key" />
+            </el-form-item>
+            <el-form-item label="value">
+              <el-input v-model="item.value" type="textarea" style="width: 600px" />
+            </el-form-item>
+            <el-button type="primary" size="mini" icon="el-icon-minus" circle @click="rmOrginAnnotation(itemindex)" />
+          </el-form>
+          <el-button type="primary" icon="el-icon-plus" @click="addOrginAnnotation">添加配置</el-button>
+        </div>
+      </el-card>
     </el-card>
 
     <el-card class="box-card">
@@ -104,9 +99,7 @@
             </el-form-item>
           </el-form>
         </template>
-
       </el-form>
-
     </el-card>
 
     <div style="text-align: center;margin-top: 20px">
@@ -115,7 +108,7 @@
   </div>
 </template>
 <script>
-import { createIngress } from '@/api/ingress'
+import { postIngress, getIngressInfo } from '@/api/ingress'
 import { getNsList } from '@/api/namespace'
 import { getServiceAll } from '@/api/service'
 import Cors from './ingressCors'
@@ -130,8 +123,9 @@ export default {
   },
   data() {
     return {
+      isEdit: false,
       name: '',
-      namespace: '',
+      namespace: 'default',
       rules: [
         { host: '', paths: [{ path: '/', svc_name: '', port: '80' }] }
       ],
@@ -140,13 +134,34 @@ export default {
       annotations: '',
       annoComponents: {
         cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false, configurationSnippet: false
-      }
+      },
+      orgin_annotations: {}, // 编辑状态下原生对象是一个map[string]string
+      orgin_annotations_list: [] // 原生对象注解的数组形式 [{key:'',value:''}] 为了方便解析
     }
   },
   created() {
     getNsList().then(rsp => {
       this.nsList = rsp.data.data
     })
+    getServiceAll(this.namespace).then(rsp => {
+      this.svcList = rsp.data.data
+    })
+    this.ns = this.$route.query.ns
+    this.name = this.$route.query.name
+    if (this.$route.query.mode === 'edit' && this.ns && this.name) {
+      getIngressInfo(this.ns, this.name).then(rsp => {
+        this.isEdit = true
+        const getIng = rsp.data.data
+        this.name = getIng.metadata.name
+        this.namespace = getIng.metadata.namespace
+        this.parseRules(getIng.spec.rules) // 解析rules
+        this.orgin_annotations = getIng.metadata.annotations
+        this.parseAnnotationsToList() // 把对象解析为数组，方便前端渲染
+        for (const comp in this.$refs) {
+          this.$refs[comp].setAnnotations(this.orgin_annotations)
+        }
+      })
+    }
   },
   methods: {
     // 清空选中的svc
@@ -156,6 +171,57 @@ export default {
           cfg.svc_name = ''
         })
       })
+    },
+    // rules原生对象解析为组件对象
+    parseRules(rules) {
+      this.rules = [] // 先清空
+      for (let i = 0; i < rules.length; i++) {
+        const rule = rules[i]
+        const paths = []
+        for (let j = 0; j < rule.http.paths.length; j++) {
+          paths.push({
+            path: rule.http.paths[j].path,
+            svc_name: rule.http.paths[j].backend.service.name,
+            port: rule.http.paths[j].backend.service.port.number.toString()
+          })
+        }
+        this.rules.push({
+          host: rule.host,
+          paths
+        })
+      }
+      if (this.rules.length === 0) { // 如果什么都没有，则加入一个默认的
+        this.rules.push({ host: '', paths: [{ path: '/', svc_name: '', port: '80' }] })
+      }
+    },
+    // 把原生注解对象解析成数组 方便前端渲染
+    parseAnnotationsToList() {
+      this.orgin_annotations_list = []
+      for (const key in this.orgin_annotations) {
+        this.orgin_annotations_list.push({ key, value: this.orgin_annotations[key] })
+      }
+    },
+    // 把数组解析为原生注解对象
+    unParseListToAnnotations() {
+      this.orgin_annotations = {} // 清空
+      this.orgin_annotations_list.forEach(item => {
+        this.orgin_annotations[item.key] = item.value
+      })
+    },
+    // 这些key被子组件取走解析掉了
+    popAnnotation(key) {
+      // 从orgin_annotations_list 删掉被解析过后的注解
+      this.orgin_annotations_list.forEach((item, index) => {
+        if (item.key === key) {
+          this.orgin_annotations_list.splice(index, 1)
+        }
+      })
+    },
+    rmOrginAnnotation(index) {
+      this.orgin_annotations_list.splice(index, 1)
+    },
+    addOrginAnnotation() {
+      this.orgin_annotations_list.push({ key: '', value: '' })
     },
     changeNs(ns) {
       this.clearSelectSvc()
@@ -184,27 +250,22 @@ export default {
       })
     },
     postNew() {
-      let annotations = this.annotations
-      const annotations_multi = {}
+      this.unParseListToAnnotations() // 反解析原始的注解
+      let annotations = {}
       for (const ref in this.$refs) {
-        const output = this.$refs[ref].output()
-        if (typeof output === 'string') {
-          annotations += output
-        } else if (typeof output === 'object') {
-          for (const key in output) {
-            annotations_multi[key] = output[key]
-          }
-        }
+        annotations = Object.assign({}, annotations, this.$refs[ref].output())
       }
+      annotations = Object.assign({}, annotations, this.orgin_annotations)
 
       const data = {
         name: this.name,
         namespace: this.namespace,
         rules: this.rules,
         annotations: annotations,
-        multi_annotations: annotations_multi
+        is_update: this.isEdit
       }
-      createIngress(data)
+
+      postIngress(data)
         .then((rsp) => {
           this.$router.push({
             path: `ingress`

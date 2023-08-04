@@ -8,8 +8,8 @@ export function getIngressList(ns, page) {
   })
 }
 
-// 创建ingress
-export function createIngress(data) {
+// 提交ingress
+export function postIngress(data) {
   return request({
     url: '/v1/ingress',
     method: 'post',
@@ -28,7 +28,7 @@ export function deleteIngress(ns, name) {
 // 获取ingress的yaml
 export function getIngressForYaml(ns, name) {
   return request({
-    url: '/v1/ingress/' + ns + '/' + name,
+    url: '/v1/ingress/yaml/' + ns + '/' + name,
     method: 'get'
   })
 }
@@ -39,5 +39,13 @@ export function genAuthFile(data) {
     url: '/v1/ingress/auth/secret',
     method: 'post',
     data
+  })
+}
+
+// 获取ingress详情
+export function getIngressInfo(ns, name) {
+  return request({
+    url: '/v1/ingress/' + ns + '/' + name,
+    method: 'get'
   })
 }
