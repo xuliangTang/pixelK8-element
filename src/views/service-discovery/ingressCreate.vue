@@ -29,6 +29,7 @@
           <el-checkbox v-model="annoComponents.rewrite">重写</el-checkbox>
           <el-checkbox v-model="annoComponents.auth">身份认证</el-checkbox>
           <el-checkbox v-model="annoComponents.rateLimit">限流</el-checkbox>
+          <el-checkbox v-model="annoComponents.serverSnippet">server-snippet</el-checkbox>
           <el-checkbox v-model="annoComponents.other">自定义</el-checkbox>
         </span>
       </div>
@@ -36,6 +37,7 @@
       <Rewrite v-show="annoComponents.rewrite" ref="rewrite" />
       <BasicAuth v-show="annoComponents.auth" ref="basicAuth" />
       <RateLimit v-show="annoComponents.rateLimit" ref="rateLimit" />
+      <ServerSnippet v-show="annoComponents.serverSnippet" ref="snippet" />
       <div v-show="annoComponents.other">
         <el-input
           v-model="annotations"
@@ -118,9 +120,10 @@ import Cors from './ingressCors'
 import Rewrite from './ingressRewrite'
 import BasicAuth from './ingress-auth'
 import RateLimit from './ingress-ratelimit'
+import ServerSnippet from './ingress-snippet-server.vue'
 export default {
   components: {
-    Cors, Rewrite, BasicAuth, RateLimit
+    Cors, Rewrite, BasicAuth, RateLimit, ServerSnippet
   },
   data() {
     return {
@@ -133,7 +136,7 @@ export default {
       svcList: [],
       annotations: '',
       annoComponents: {
-        cors: false, rewrite: false, auth: false, other: false, rateLimit: false
+        cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false
       }
     }
   },
@@ -179,14 +182,24 @@ export default {
     },
     postNew() {
       let annotations = this.annotations
+      const annotations_multi = {}
       for (const ref in this.$refs) {
-        annotations += this.$refs[ref].output()
+        const output = this.$refs[ref].output()
+        if (typeof output === 'string') {
+          annotations += output
+        } else if (typeof output === 'object') {
+          for (const key in output) {
+            annotations_multi[key] = output[key]
+          }
+        }
       }
+
       const data = {
         name: this.name,
         namespace: this.namespace,
         rules: this.rules,
-        annotations: annotations
+        annotations: annotations,
+        multi_annotations: annotations_multi
       }
       createIngress(data)
         .then((rsp) => {
