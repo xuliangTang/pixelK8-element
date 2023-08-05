@@ -28,6 +28,7 @@
           <el-checkbox v-model="annoComponents.rewrite">重写</el-checkbox>
           <el-checkbox v-model="annoComponents.auth">身份认证</el-checkbox>
           <el-checkbox v-model="annoComponents.rateLimit">限流</el-checkbox>
+          <el-checkbox v-model="annoComponents.canary">灰度</el-checkbox>
           <el-checkbox v-model="annoComponents.serverSnippet">server-snippet</el-checkbox>
           <el-checkbox v-model="annoComponents.configurationSnippet">configuration-snippet</el-checkbox>
           <el-checkbox v-model="annoComponents.other">其他</el-checkbox>
@@ -39,6 +40,7 @@
       <RateLimit v-show="annoComponents.rateLimit" ref="rateLimit" :show.sync="annoComponents.rateLimit" @pop="popAnnotation" />
       <ServerSnippet v-show="annoComponents.serverSnippet" ref="serverSnippet" :show.sync="annoComponents.serverSnippet" @pop="popAnnotation" />
       <ConfigurationSnippet v-show="annoComponents.configurationSnippet" ref="configurationSnippet" :show.sync="annoComponents.configurationSnippet" @pop="popAnnotation" />
+      <Canary v-show="annoComponents.canary" ref="canary" :show.sync="annoComponents.canary" @pop="popAnnotation" />
       <!--<div v-show="annoComponents.other">
         <el-input
           v-model="annotations"
@@ -117,9 +119,10 @@ import BasicAuth from './ingress-auth'
 import RateLimit from './ingress-ratelimit'
 import ServerSnippet from './ingress-snippet-server.vue'
 import ConfigurationSnippet from './ingress-snippet-configuration'
+import Canary from './ingress-canary'
 export default {
   components: {
-    Cors, Rewrite, BasicAuth, RateLimit, ServerSnippet, ConfigurationSnippet
+    Cors, Rewrite, BasicAuth, RateLimit, ServerSnippet, ConfigurationSnippet, Canary
   },
   data() {
     return {
@@ -133,7 +136,7 @@ export default {
       svcList: [],
       annotations: '',
       annoComponents: {
-        cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false, configurationSnippet: false
+        cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false, configurationSnippet: false, canary: false
       },
       orgin_annotations: {}, // 编辑状态下原生对象是一个map[string]string
       orgin_annotations_list: [] // 原生对象注解的数组形式 [{key:'',value:''}] 为了方便解析

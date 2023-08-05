@@ -57,6 +57,12 @@
                   disable-transitions
                 >限流</el-tag>
               </span>
+              <span v-if="scope.row.opt.canary_enable">
+                <el-tag
+                  type="success"
+                  disable-transitions
+                >灰度</el-tag>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="创建时间">
