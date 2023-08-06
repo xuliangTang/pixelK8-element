@@ -9,7 +9,7 @@
           <el-input v-model="name" placeholder="ingress名称" :disabled="isEdit" />
         </el-form-item>
         <el-form-item label="命名空间">
-          <el-select v-model="namespace" @change="changeNs" :disabled="isEdit" >
+          <el-select v-model="namespace" :disabled="isEdit" @change="changeNs">
             <el-option
               v-for="ns in nsList"
               :label="ns.name"
@@ -49,7 +49,7 @@
           placeholder="格式: key:value;"
         />
       </div>-->
-      <el-card class="box-card" v-show="annoComponents.other">
+      <el-card v-show="annoComponents.other" class="box-card">
         <div slot="header" class="clearfix">
           <span>其他配置</span>
         </div>
@@ -104,6 +104,29 @@
       </el-form>
     </el-card>
 
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>TLS设置 <i class="el-icon-circle-plus-outline" style="cursor:pointer" @click="tls.push({hosts:[],secretName:'',hosts_str:''})" /> </span>
+      </div>
+      <el-form v-for="(tlsitem,tlsindex) in tls" style="border-bottom: dashed 1px #ddd;padding-bottom: 10px">
+        <el-form :inline="true">
+          <el-form-item label="域名">
+            <el-input v-model="tlsitem.hosts_str" placeholder="填写域名，多个请用逗号分隔" style="width: 300px" />
+          </el-form-item>
+          <el-form-item label="选择密文">
+            <el-select v-model="tlsitem.secretName">
+              <el-option
+                v-for="secret in secretList"
+                :label="secret.name"
+                :value="secret.name"
+              />
+            </el-select>
+          </el-form-item>
+          <el-button type="primary" @click="tls.splice(tlsindex,1)">-</el-button>
+        </el-form>
+      </el-form>
+    </el-card>
+
     <div style="text-align: center;margin-top: 20px">
       <el-button type="primary" @click="postNew()">保存</el-button>
     </div>
@@ -113,6 +136,7 @@
 import { postIngress, getIngressInfo } from '@/api/ingress'
 import { getNsList } from '@/api/namespace'
 import { getServiceAll } from '@/api/service'
+import { getSecretList } from '@/api/secret'
 import Cors from './ingressCors'
 import Rewrite from './ingressRewrite'
 import BasicAuth from './ingress-auth'
@@ -132,8 +156,12 @@ export default {
       rules: [
         { host: '', paths: [{ path: '/', svc_name: '', port: '80' }] }
       ],
+      tls: [
+        // {hosts:[],secretName:'',hosts_str:''}
+      ],
       nsList: [],
       svcList: [],
+      secretList: [],
       annotations: '',
       annoComponents: {
         cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false, configurationSnippet: false, canary: false
@@ -149,6 +177,9 @@ export default {
     getServiceAll(this.namespace).then(rsp => {
       this.svcList = rsp.data.data
     })
+    getSecretList(this.namespace, 1, 100).then(rsp => {
+      this.secretList = rsp.data.data.items
+    })
     this.ns = this.$route.query.ns
     this.name = this.$route.query.name
     if (this.$route.query.mode === 'edit' && this.ns && this.name) {
@@ -158,6 +189,7 @@ export default {
         this.name = getIng.metadata.name
         this.namespace = getIng.metadata.namespace
         this.parseRules(getIng.spec.rules) // 解析rules
+        this.parseTLS(getIng.spec.tls) // 解析tls
         this.orgin_annotations = getIng.metadata.annotations
         this.parseAnnotationsToList() // 把对象解析为数组，方便前端渲染
         for (const comp in this.$refs) {
@@ -196,6 +228,20 @@ export default {
       if (this.rules.length === 0) { // 如果什么都没有，则加入一个默认的
         this.rules.push({ host: '', paths: [{ path: '/', svc_name: '', port: '80' }] })
       }
+    },
+    parseTLS(tls) {
+      if (tls !== undefined && tls !== null) {
+        this.tls = tls
+      }
+      this.tls.forEach(item => {
+        item.hosts_str = item.hosts.join(',')
+      })
+    },
+    unParseTLS() {
+      // 把hosts_str要解析成数组,用逗号分开
+      this.tls.forEach(item => {
+        item.hosts = item.hosts_str.split(',')
+      })
     },
     // 把原生注解对象解析成数组 方便前端渲染
     parseAnnotationsToList() {
@@ -254,6 +300,7 @@ export default {
     },
     postNew() {
       this.unParseListToAnnotations() // 反解析原始的注解
+      this.unParseTLS()
       let annotations = {}
       for (const ref in this.$refs) {
         annotations = Object.assign({}, annotations, this.$refs[ref].output())
@@ -265,6 +312,7 @@ export default {
         namespace: this.namespace,
         rules: this.rules,
         annotations: annotations,
+        tls: this.tls,
         is_update: this.isEdit
       }
 
