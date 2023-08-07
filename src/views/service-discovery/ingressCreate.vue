@@ -30,6 +30,7 @@
           <el-checkbox v-model="annoComponents.rateLimit">限流</el-checkbox>
           <el-checkbox v-model="annoComponents.canary">灰度</el-checkbox>
           <el-checkbox v-model="annoComponents.mirror">流量复制</el-checkbox>
+          <el-checkbox v-model="annoComponents.defaultBackend">默认后端</el-checkbox>
           <el-checkbox v-model="annoComponents.serverSnippet">server-snippet</el-checkbox>
           <el-checkbox v-model="annoComponents.configurationSnippet">configuration-snippet</el-checkbox>
           <el-checkbox v-model="annoComponents.other">其他</el-checkbox>
@@ -41,6 +42,7 @@
       <RateLimit v-show="annoComponents.rateLimit" ref="rateLimit" :show.sync="annoComponents.rateLimit" @pop="popAnnotation" />
       <Canary v-show="annoComponents.canary" ref="canary" :show.sync="annoComponents.canary" @pop="popAnnotation" />
       <Mirror v-show="annoComponents.mirror" ref="mirror" :show.sync="annoComponents.mirror" @pop="popAnnotation" />
+      <DefaultBackend v-show="annoComponents.defaultBackend" ref="defaultBackend" :show.sync="annoComponents.defaultBackend" @pop="popAnnotation" />
       <ServerSnippet v-show="annoComponents.serverSnippet" ref="serverSnippet" :show.sync="annoComponents.serverSnippet" @pop="popAnnotation" />
       <ConfigurationSnippet v-show="annoComponents.configurationSnippet" ref="configurationSnippet" :show.sync="annoComponents.configurationSnippet" @pop="popAnnotation" />
       <!--<div v-show="annoComponents.other">
@@ -147,9 +149,10 @@ import ServerSnippet from './ingress-snippet-server.vue'
 import ConfigurationSnippet from './ingress-snippet-configuration'
 import Canary from './ingress-canary'
 import Mirror from './ingress-mirror'
+import DefaultBackend from './ingress-default-backend'
 export default {
   components: {
-    Cors, Rewrite, BasicAuth, RateLimit, ServerSnippet, ConfigurationSnippet, Canary, Mirror
+    Cors, Rewrite, BasicAuth, RateLimit, ServerSnippet, ConfigurationSnippet, Canary, Mirror, DefaultBackend
   },
   data() {
     return {
@@ -167,7 +170,7 @@ export default {
       secretList: [],
       annotations: '',
       annoComponents: {
-        cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false, configurationSnippet: false, canary: false, mirror: false
+        cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false, configurationSnippet: false, canary: false, mirror: false, defaultBackend: false
       },
       orgin_annotations: {}, // 编辑状态下原生对象是一个map[string]string
       orgin_annotations_list: [] // 原生对象注解的数组形式 [{key:'',value:''}] 为了方便解析

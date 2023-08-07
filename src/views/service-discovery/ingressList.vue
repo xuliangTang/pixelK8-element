@@ -69,6 +69,12 @@
                   disable-transitions
                 >流量复制</el-tag>
               </span>
+              <span v-if="scope.row.opt.default_backend_enable">
+                <el-tag
+                  type="success"
+                  disable-transitions
+                >默认后端</el-tag>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="创建时间">
