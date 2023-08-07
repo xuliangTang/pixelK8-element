@@ -29,6 +29,7 @@
           <el-checkbox v-model="annoComponents.auth">身份认证</el-checkbox>
           <el-checkbox v-model="annoComponents.rateLimit">限流</el-checkbox>
           <el-checkbox v-model="annoComponents.canary">灰度</el-checkbox>
+          <el-checkbox v-model="annoComponents.mirror">流量复制</el-checkbox>
           <el-checkbox v-model="annoComponents.serverSnippet">server-snippet</el-checkbox>
           <el-checkbox v-model="annoComponents.configurationSnippet">configuration-snippet</el-checkbox>
           <el-checkbox v-model="annoComponents.other">其他</el-checkbox>
@@ -38,9 +39,10 @@
       <Rewrite v-show="annoComponents.rewrite" ref="rewrite" :show.sync="annoComponents.rewrite" @pop="popAnnotation" />
       <BasicAuth v-show="annoComponents.auth" ref="basicAuth" :show.sync="annoComponents.auth" @pop="popAnnotation" />
       <RateLimit v-show="annoComponents.rateLimit" ref="rateLimit" :show.sync="annoComponents.rateLimit" @pop="popAnnotation" />
+      <Canary v-show="annoComponents.canary" ref="canary" :show.sync="annoComponents.canary" @pop="popAnnotation" />
+      <Mirror v-show="annoComponents.mirror" ref="mirror" :show.sync="annoComponents.mirror" @pop="popAnnotation" />
       <ServerSnippet v-show="annoComponents.serverSnippet" ref="serverSnippet" :show.sync="annoComponents.serverSnippet" @pop="popAnnotation" />
       <ConfigurationSnippet v-show="annoComponents.configurationSnippet" ref="configurationSnippet" :show.sync="annoComponents.configurationSnippet" @pop="popAnnotation" />
-      <Canary v-show="annoComponents.canary" ref="canary" :show.sync="annoComponents.canary" @pop="popAnnotation" />
       <!--<div v-show="annoComponents.other">
         <el-input
           v-model="annotations"
@@ -144,9 +146,10 @@ import RateLimit from './ingress-ratelimit'
 import ServerSnippet from './ingress-snippet-server.vue'
 import ConfigurationSnippet from './ingress-snippet-configuration'
 import Canary from './ingress-canary'
+import Mirror from './ingress-mirror'
 export default {
   components: {
-    Cors, Rewrite, BasicAuth, RateLimit, ServerSnippet, ConfigurationSnippet, Canary
+    Cors, Rewrite, BasicAuth, RateLimit, ServerSnippet, ConfigurationSnippet, Canary, Mirror
   },
   data() {
     return {
@@ -164,7 +167,7 @@ export default {
       secretList: [],
       annotations: '',
       annoComponents: {
-        cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false, configurationSnippet: false, canary: false
+        cors: false, rewrite: false, auth: false, other: false, rateLimit: false, serverSnippet: false, configurationSnippet: false, canary: false, mirror: false
       },
       orgin_annotations: {}, // 编辑状态下原生对象是一个map[string]string
       orgin_annotations_list: [] // 原生对象注解的数组形式 [{key:'',value:''}] 为了方便解析
